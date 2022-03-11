@@ -19,6 +19,8 @@ const contents = files
   .map(content => content.toString().replace(/^\s+|\s+$/g, ''))
   .join('\n\n');
 
+!fs.existsSync('dst') && fs.mkdirSync('dst');
+
 fs.writeFileSync(
   './dst/mvw.js',
   `(() => {\n${contents}\n})();`
