@@ -1,0 +1,36 @@
+{
+  "name": "mvw",
+  "version": "1.0.0",
+  "description": "Minimalistic model-view embracing the DOM",
+  "main": "./dst/mvw.js",
+  "scripts": {
+    "build": "node build",
+    "test": "node build\njest"
+  },
+  "jest": {
+    "testEnvironment": "jsdom"
+  },
+  "keywords": [
+    "web",
+    "dom",
+    "js",
+    "html",
+    "w3c",
+    "mvc",
+    "mvvm",
+    "mvp",
+    "mvw",
+    "javascript",
+    "view",
+    "model",
+    "extension",
+    "library",
+    "framework"
+  ],
+  "author": "DataDink",
+  "license": "Unlicense",
+  "devDependencies": {
+    "jest": "^27.5.1",
+    "terser": "^5.12.0"
+  }
+}
