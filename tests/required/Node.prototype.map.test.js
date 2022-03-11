@@ -31,10 +31,40 @@ test('maps to descendant property', () => {
 });
 
 test('binds functions', () => {
-  var element = document.createElement('element');
+  var element = document.createElement('div');
   element.setAttribute('data-onclick', 'handler')
   var model = {handler: function() { this.value = 10; }};
   element.map(model);
   element.click();
   expect(model.value).toBe(10);
+});
+
+test('ignores foreign scopes', () => {
+  var container = document.createElement('div');
+  var foreign = document.createElement('span');
+  foreign.setAttribute('data-value', 'value');
+  foreign.map({value: 10});
+  expect(foreign.value).toBe(10);
+  container.appendChild(foreign);
+  container.map({value: 20});
+  expect(foreign.value).toBe(10);
+});
+
+test('remaps native scopes', () => {
+  var container = document.createElement('div');
+  var native = container.appendChild(document.createElement('span'));
+  native.setAttribute('data-value', 'value');
+  container.map({value: 10});
+  expect(native.value).toBe(10);
+  container.map({value: 20});
+  expect(native.value).toBe(20);
+});
+
+test('remaps unscoped', () => {
+  var container = document.createElement('div');
+  container.map({});
+  var unscoped = container.appendChild(document.createElement('span'));
+  unscoped.setAttribute('data-value', 'value');
+  container.map({value: 10});
+  expect(unscoped.value).toBe(10);
 });
