@@ -37,13 +37,15 @@
       var content = (Array.isArray(value) ? value : [value])
         .filter(v => v != null)
         .map(model => element.template.map(model))
-        .reverse()
         .flatMap(fragment => Array.from(fragment.childNodes));
       element[Cleanup] = () => {
         content.forEach(e => e.parentNode && e.parentNode.removeChild(e));
         delete element[Cleanup];
       };
-      content.forEach(e => element.parentNode.insertBefore(e, element.nextSibling))
+      element.parentNode.insertBefore(
+        content.reduce((frag,node) => frag.appendChild(node)&&frag, document.createDocumentFragment()),
+        element.nextSibling
+      )
     }
   });
 })();
