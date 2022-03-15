@@ -1,0 +1,650 @@
+<html ondragover="event.preventDefault()" ondrop="event.preventDefault()">
+  <head>
+    <style id="css-fonts">
+      @import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative&family=League+Gothic:wdth@90&family=Lexend+Peta&family=Roboto+Condensed:wght@300&display=swap');
+      html {
+        text-shadow:
+          0px -1px rgba(255,255,255,.5),
+          1px -1px rgba(255,255,255,.5),
+          1px 0px rgba(255,255,255,.5),
+          1px 1px rgba(255,255,255,.5),
+          0px 1px rgba(255,255,255,.5),
+          -1px 1px rgba(255,255,255,.5),
+          -1px 0px rgba(255,255,255,.5),
+          -1px -1px rgba(255,255,255,.5);
+      }
+    </style>
+    <style id="css-layout">
+      * {
+        box-sizing: border-box;
+      }
+      html {
+        display: flex;
+        position: absolute;
+        width: 100vw; height: 100vh;
+        margin: 0; padding: 0;
+        justify-content: center;
+        align-content: center;
+        align-items: center;
+        font-size: .77vmax;
+        min-width: 100vh;
+      }
+      body {
+        display: flex;
+        position: relative;
+        justify-content: stretch;
+        align-content: stretch;
+        align-items: stretch;
+        flex-direction: column;
+        margin: 0; padding: 0;
+        width: 100vmax; height: 77vmax;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: 100vmax auto;
+      }
+      @media (min-width: 130vmin) {
+        html { font-size: 1vmin; }
+        body {
+          width: 130vmin; height: 100vmin;
+          background-size: 130vmin auto;
+        }
+      }
+      body > header {
+        height: 15rem;
+      }
+      main {
+        display: flex;
+        flex-direction: column;
+        justify-content: stretch;
+        align-content: stretch;
+        align-items: stretch;
+        flex: 1;
+      }
+      body > footer {
+        height: 5rem;
+      }
+      .weekdays {
+        display: flex;
+        flex-direction: row;
+        justify-content: stretch;
+        align-content: stretch;
+        align-items: stretch;
+        margin: 0; padding: 0;
+      }
+      .weekday {
+        display: block;
+        text-align: center;
+        margin: 0; padding: 0;
+        flex: 1; width: 0;
+      }
+      .week {
+        display: flex;
+        flex-direction: row;
+        justify-content: stretch;
+        align-content: stretch;
+        align-items: stretch;
+        margin: 0; padding: 0;
+        flex: 1;
+      }
+      .day {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-content: stretch;
+        align-items: stretch;
+        flex: 1; width: 0;
+      }
+      form {
+        position: fixed;
+        display: flex;
+        left: 0; right: 0;
+        top: 0; bottom: 0;
+        flex-direction: column;
+        justify-content: center;
+        align-content: center;
+        align-items: center;
+        background: rgba(0,0,0,.25);
+        margin-block: 0;
+      }
+      form > * {
+        background: white;
+        margin: 0;
+        width: 60rem;
+      }
+    </style>
+    <style id="css-content">
+      h1,h2,h3,h4,h5,h6 {
+        margin: 0; padding: 0;
+        font-family: 'Cinzel Decorative', cursive;
+        margin-top: 1rem;
+      }
+      h1 { font-size: 10rem; }
+      h2 { font-size: 8rem; }
+      h3 { font-size: 6rem; }
+      h4 { font-size: 4rem; }
+      h5 { font-size: 2rem; }
+      h6 { font-size: 1rem; }
+      main {
+        padding: 0 6rem;
+      }
+      header {
+        text-align: center;
+        font-size: 2rem;
+      }
+      body > header > h1 {
+        font-size: 9.5rem;
+      }
+      body > footer {
+        font-size: 3rem;
+        text-align: center;
+      }
+      button {
+        background: white;
+        display: inline-block;
+        vertical-align: middle;
+        border: .2rem solid black;
+        margin: 0 .12em; padding: .05em .3em;
+        border-radius: .5em;
+        font-size: 2rem;
+        cursor: pointer;
+      }
+      button:last-child { margin-right: 0; }
+      button:first-child { margin-left: 0; }
+      button.tiny { font-size: 1rem; margin: 0; }
+      button.huge { font-size: 4rem; }
+      .neutral { background: rgba(128, 200, 255, .9); }
+      .safe { background: rgba(80, 255, 128, .9); }
+      .warn { background: rgba(255, 255, 128, .9); }
+      .danger { background: rgba(255, 128, 128, .9); }
+      [disabled] {
+        background: rgba(0,0,0,.25);
+      }
+      [disabled] button {
+        display: none;
+      }
+      .weekdays {
+        list-style: none;
+        border-bottom: .6rem solid black;
+      }
+      .weekday {
+        margin: 0; padding: 0;
+        text-align: center;
+        font-weight: bold;
+        font-family: 'Lexend Peta';
+        font-size: 4.5rem;
+      }
+      .week {
+        list-style: none;
+        border-bottom: .6rem solid black;
+      }
+      .day {
+        border-style: solid;
+        border-color: black;
+        border-width: 0 .3em 0 .3em;
+        background: rgba(255, 255, 255, .25);
+      }
+      .day[disabled] {
+        background: rgba(0,0,0,.25);
+      }
+      .day:first-of-type { border-left: .6rem solid black; }
+      .day:last-of-type { border-right: .6rem solid black; }
+      .date {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        font-family: 'Roboto Condensed';
+        font-size: 2rem;
+      }
+      .events {
+        font-family: 'League Gothic';
+        font-size: 2.25rem;
+        margin: 0;
+        margin-block: 0;
+        margin-inline: 0;
+        padding-inline: 0;
+        padding: 0 .25em .25em .25em;
+      }
+      .events .time {
+        margin: 0; padding: 0;
+        margin-block: 0;
+        margin-inline: 0;
+        padding-inline: 0;
+        margin-right: .25em;
+        display: block;
+        float: left;
+        clear: left;
+      }
+      .events .description {
+        margin: 0; padding: 0;
+        margin-block: 0;
+        margin-inline: 0;
+        padding-inline: 0;
+        display: block;
+        clear: right;
+        text-align: center;
+      }
+      .events .description::after {
+        content: '';
+        display: block;
+        height: .25em;
+      }
+      label,
+      form > menu {
+        font-size: 3rem;
+        padding: 1em 1.5em;
+        display: flex;
+        flex-direction: row;
+        align-content: center;
+        align-items: center;
+      }
+      label {
+        justify-content: stretch;
+      }
+      form > menu {
+        justify-content: flex-end;
+      }
+      label > * {
+        flex-grow: 1;
+      }
+      label > span {
+        flex-grow: 0;
+        padding: 0 1em;
+      }
+    </style>
+    <style id="css-application">
+      [data-onclick] {
+        cursor: pointer;
+        user-select: none;
+      }
+    </style>
+    <style id="css-print">
+      @media print{
+        @page {size: landscape}
+        button { display: none; }
+        .no-print { display: none; }
+      }
+    </style>
+  </head>
+  <body data-classes-leapyear="year.leapyear" data-style-backgroundImage="background" data-ondrop="setBackgroundImage">
+    <header>
+      <div class="no-print">
+        <span data-onclick="setBackgroundUrl">drop an image or click here to set background</span>
+        •
+        <span data-onclick="resetCache">click here to reset everything</span>
+      </div>
+      <h1>
+        <button class="huge" data-onclick="year.previous">&lt;&lt;</button>
+        <button class="huge" data-onclick="month.previous">&lt;</button>
+        <span data-textContent="month.name" data-onclick="resetDate"></span>
+        <span data-textContent="year.index" data-onclick="resetDate"></span>
+        <button class="huge" data-onclick="month.next">&gt;</button>
+        <button class="huge" data-onclick="year.next">&gt;&gt;</button>
+      </h1>
+    </header>
+    <main>
+      <ul class="weekdays">
+        <li class="weekday">Sun</li>
+        <li class="weekday">Mon</li>
+        <li class="weekday">Tue</li>
+        <li class="weekday">Wed</li>
+        <li class="weekday">Thu</li>
+        <li class="weekday">Fri</li>
+        <li class="weekday">Sat</li>
+      </ul>
+      <template data-template="calendar.weeks">
+        <ul class="week">
+          <template data-template="days">
+            <li class="day" data-settings-disabled="inactive">
+              <aside class="date">
+                <span data-textContent="date"></span>
+                <button class="tiny safe" data-onclick="createEvent">+</button>
+              </aside>
+              <dl class="events">
+                <template data-template="events">
+                  <dt class="time">
+                    <button class="tiny danger" data-onclick="delete">x</button>
+                    <span data-textContent="begin" data-onclick="edit"></span>-<span data-textContent="end" data-onclick="edit"></span>:
+                  </dt>
+                  <dd class="description" data-textContent="text" data-onclick="edit"></dd>
+                </template>
+              </dl>
+            </li>
+          </template>
+        </ul>
+      </template>
+    </main>
+    <footer data-textContent="footer" data-onclick="setFooter"></footer>
+    <template data-template="eventDialog">
+      <form data-onsubmit="submit">
+        <header><h4>Edit Event</h4></header>
+        <label>
+          <span>Begins:</span>
+          <select name="begin" data-value="data.begin">
+            <template data-template="data.beginTimes">
+              <option data-textContent="value" data-settings-selected="active"></option>
+            </template>
+          </select>
+        </label>
+        <label>
+          <span>Ends:</span>
+          <select name="end" data-value="data.end">
+            <template data-template="data.endTimes">
+              <option data-textContent="value" data-settings-selected="active"></option>
+            </template>
+          </select>
+        </label>
+        <label>
+          <span>Text:</span>
+          <input name="text" type="text" data-value="data.text" />
+        </label>
+        <menu>
+          <button type="submit" class="safe">Save</button>
+          <button type="button" class="neutral" data-onclick="cancel">Cancel</button>
+        </menu>
+      </form>
+    </template>
+    <template data-template="inputDialog">
+      <form data-onsubmit="submit">
+        <header><h4 data-textContent="data.title"></h4></header>
+        <label>
+          <span>Text:</span>
+          <input type="text" name="value" data-value="data.value" />
+        </label>
+        <menu>
+          <button type="submit" class="safe">Update</button>
+          <button type="button" class="neutral" data-onclick="cancel">Cancel</button>
+        </menu>
+      </form>
+    </template>
+    <script id="js-mvw">
+      // https://github.com/DataDink/mvw
+      // version 1.0.0
+      (() => {(()=>{const e=/^data\-/i,t=Symbol(" _mapping scope_ ");Node.prototype.map=function(r){var n=this,a=arguments[1]||n[t]||(n[t]={});if(a===(n[t]||(n[t]=a)))return Array.from(n.attributes||[]).filter((t=>e.test(t.name))).forEach((t=>{var a=new ObjectQuery(r,t.value,!1),i="function"==typeof a.value?a.value.bind(a.binding):a.value,o=t.name.replace(e,"").replace(/\-+/g,".");new ObjectQuery(n,o,!0).value=i})),Array.from(n.childNodes).forEach((e=>e.map(r,a))),n}})();class ObjectQuery{complete;binding;property;get value(){if(this.complete)return this.binding[this.property]}set value(e){this.complete&&(this.binding[this.property]=e)}constructor(e,t,r=!1){for(var n=Array.from(t.matchAll(/[^\.]+/g)).map((e=>e[0]));null!=e&&n.length;)this.property=r?ObjectQuery.#e(e,n.shift()):n.shift(),e=(this.binding=e)[this.property];this.complete=!n.length&&null!=this.binding}static#e(e,t){if(t in e)return t;for(var r=t.toLowerCase();null!=e;){var n=Object.getOwnPropertyNames(e).find((e=>e.toLowerCase()===r));if(null!=n)return n;e=Object.getPrototypeOf(e)}return t}}Object.defineProperty(HTMLElement.prototype,"classes",{configurable:!1,enumerable:!0,get:function(){var e=this;return new Proxy({},{has:(t,r)=>e.classList.contains(r),get:(t,r)=>e.classList.contains(r),set:(t,r,n)=>e.classList.remove(r)||!!n&&e.classList.add(r)||!0,ownKeys:()=>Array.from(e.classList)})}}),Object.defineProperty(HTMLElement.prototype,"settings",{configurable:!1,enumerable:!0,get:function(){var e=this;return new Proxy({},{has:(t,r)=>e.hasAttribute(r),get:(t,r)=>!!e.hasAttribute(r)&&e.getAttribute(r),set:(t,r,n)=>null!=n&&!1!==n?e.setAttribute(r,!0===n?r:n)||!0:e.removeAttribute(r)||!0,ownKeys:()=>Array.from(e.attributes).map((e=>e.name))})}}),(()=>{const e=Symbol(" _template cleanup_ ");Object.defineProperty(HTMLTemplateElement.prototype,"template",{configurable:!1,enumerable:!1,get:function(){return this.content.cloneNode(!0)},set:function(t){var r=this;if(e in r&&r[e](),r.parentNode){var n=(Array.isArray(t)?t:[t]).filter((e=>null!=e)).map((e=>r.template.map(e))).flatMap((e=>Array.from(e.childNodes)));r[e]=()=>{n.forEach((e=>e.parentNode&&e.parentNode.removeChild(e))),delete r[e]},r.parentNode.insertBefore(n.reduce(((e,t)=>e.appendChild(t)&&e),document.createDocumentFragment()),r.nextSibling)}}})})();})();
+    </script>
+    <script id="js-application">
+      class Application {
+        #view; // The Node the application is bound to
+        events; // An array of Event
+        background; // A url to a remote image or a data url
+        footer; // Some text (e.g. restaurant name) at the bottom of the page
+
+        year = new Year(this);
+        month = new Month(this);
+        calendar = new Calendar(this);
+
+        resetDate() { // Return the app to the current month/year
+          this.year = new Year(this);
+          this.month = new Month(this);
+          this.calendar = new Calendar(this);
+          this.refresh();
+        }
+
+        eventDialog; // A dialog initialized with an Event for editing
+
+        createEvent(week, day) { // Creates a new event for the week/day indexes and goes into edit mode
+          var event = new Event(this, week, day);
+          this.events.push(event);
+          return this.editEvent(event)
+                     .then(data => {
+                       if (!data) { this.deleteEvent(event); }
+                       this.refresh();
+                       return data;
+                     });
+        }
+
+        editEvent(event) { // Creates a dialog initialized with an event for editing
+          return new Promise(resolve => {
+            this.eventDialog = new Dialog(event, resolve);
+            this.refresh();
+          })
+          .then(data => {
+            this.eventDialog = null;
+            if (data) {
+              event.begin = data.begin;
+              event.end = data.end;
+              event.text = data.text;
+            }
+            this.refresh();
+            return data;
+          })
+        }
+
+        deleteEvent(event) { // Removes an event
+          this.events = this.events.filter(e => e !== event);
+          this.refresh();
+        }
+
+        inputDialog; // A dialog initialized with {title,value} to set/edit a value
+
+        setFooter() { // Creates a dialog to edit the footer text
+          return new Promise(resolve => {
+            this.inputDialog = new Dialog({
+              title: 'Edit Text',
+              value: this.footer
+            }, resolve);
+            this.refresh();
+          })
+          .then(data => {
+            if (data) {
+              this.footer = data.value;
+            };
+            this.inputDialog = null;
+            this.refresh();
+          });
+        }
+
+        setBackgroundUrl() { // Creates a dialog to set the background image url
+          return new Promise(resolve => {
+            this.inputDialog = new Dialog({
+              title: 'Enter Image URL',
+              value: ''
+            }, resolve);
+            this.refresh();
+          })
+          .then(data => {
+            if (data) {
+              this.background = `url(${data.value})`
+            }
+            this.inputDialog = null;
+            this.refresh();
+          });
+        }
+
+        setBackgroundImage(e) { // Converts a dropped image file into a data url and sets the background
+          e.preventDefault();
+          var file = e.dataTransfer.files[0];
+          if (!file) { return; }
+          var reader = new FileReader();
+          reader.onload = () => {
+            this.background = `url(${reader.result})`;
+            this.refresh();
+          }
+          reader.readAsDataURL(file);
+        }
+
+        constructor(view) { // Creates a new Application and binds a view to it
+          this.#view = view;
+          this.load();
+        }
+
+        #SaveKey = 'calendar-designer';
+
+        refresh() { // Saves session data and re-maps the view
+          this.#view.map(this);
+          localStorage.setItem(this.#SaveKey, JSON.stringify({
+            events: this.events,
+            background: this.background,
+            footer: this.footer
+          }));
+        }
+
+        load() { // Loads the last saved session data and applies it to the application
+          var data = JSON.parse(localStorage.getItem(this.#SaveKey)||JSON.stringify({
+            events: [],
+            background: '',
+            footer: 'Click To Set'
+          }));
+          this.events = (data.events||[]).map(d => Object.assign(new Event(this), d));
+          this.background = data.background||'';
+          this.footer = data.footer||'Click To Set';
+          this.refresh();
+        }
+
+        resetCache() { // Resets session data to defaults
+          localStorage.removeItem(this.#SaveKey);
+          this.load();
+        }
+      }
+
+      class Year { // Information about a specific year
+        #app; // The current app
+        index; // The year (e.g. 2023)
+        leapyear; // true/false if this is a leapyear
+        constructor(app) {
+          this.#app = app;
+          this.index = new Date().getFullYear();
+          this.leapyear = (0 == this.index % 4)
+                      && (0 != this.index % 100)
+                      || (0 == this.index % 400);
+        }
+        next() { // Increments the year
+          this.index++;
+          this.#app.refresh();
+        }
+        previous() { // Decrements the year
+          this.index++;
+          this.#app.refresh();
+        }
+      }
+
+      class Month {
+        #app; // The current app
+        index; // The zero-based index of the month
+        get name() { return ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'][this.index]; };
+        constructor(app) {
+          this.#app = app;
+          this.index = new Date().getMonth();
+        }
+        next() { // increments the month
+          var date = new Date(this.#app.year.index, this.index + 1, 1);
+          this.#app.year.index = date.getFullYear();
+          this.index = date.getMonth();
+          this.#app.refresh();
+        }
+        previous() { // decrements the month
+          var date = new Date(this.#app.year.index, this.index - 1, 1);
+          this.#app.year.index = date.getFullYear();
+          this.index = date.getMonth();
+          this.#app.refresh();
+        }
+      }
+
+      class Calendar { // Represents a grid of days & events
+        #app; // The current app
+        constructor(app) { this.#app = app; }
+        get weeks() { // A collection of Weeks
+          var stop = new Date(this.#app.year.index, this.#app.month.index + 1, 1);
+          var current = new Date(this.#app.year.index, this.#app.month.index, 1);
+          current.setDate(1 - current.getDay());
+          var weeks = [];
+          while (current.valueOf() < stop.valueOf()) {
+            weeks.push(new Calendar.Week(this, weeks.length, current));
+          }
+          return weeks;
+        }
+
+        static Week = class Week { // Represents a collection of days & events
+          #calendar; // The current calendar being generated
+          index; // The index of the week in the month
+          days = []; // A collection of Days
+          constructor(calendar, index, day) {
+            this.#calendar = calendar;
+            this.index = index;
+            for (var i = 0; i < 7; i++) {
+              this.days.push(new Calendar.Week.Day(this, i, day));
+              day.setDate(day.getDate() + 1);
+            }
+          }
+
+          static Day = class Day { // Information about a day and its events
+            #week; // The current week being generated
+            index; // The index of the day in the week
+            date; // The index of the day in the month
+            events; // The Events that occur on this day
+            constructor(week, index, date) {
+              this.#week = week;
+              this.index = index;
+              this.date = date.getDate();
+              this.inactive = week.#calendar.#app.month.index !== date.getMonth();
+              this.events = this.inactive ? []
+                : week.#calendar.#app.events
+                      .filter(e => e.week === week.index && e.day === index)
+                      .sort((a,b) => a.sort>b.sort?1:-1);
+            }
+            createEvent() { // Trigger the creation of a new event for this day and week
+              this.#week.#calendar.#app.createEvent(
+                this.#week.index,
+                this.index
+              );
+            }
+          }
+        }
+      }
+
+      class Event { // Information about an event
+        #app; // The current app
+        week; // The week index of the month this falls on
+        day; // The day index of the week this falls on
+        begin = '12:00p'; // When the event starts
+        get beginTimes() { return Event.Times.map(v => {return {value: v, active: v === this.begin}; }); }
+        end = '1:00p'; // When the event ends
+        get endTimes() { return Event.Times.map(v => {return {value: v, active: v === this.end}; }); }
+        text = 'New Event'; // The event description/title
+        get sort() { // A value that can be used to sort events
+          var parse = /(?<hr>\d+):(?<min>\d+)(?<mod>a|p)/i.exec(this.begin);
+          return (parseInt(parse.groups.hr)%12) + parseInt(parse.groups.min)/60 + (parse.groups.mod === 'p' ? 12 : 0);
+        }
+        constructor(app, week, day) {
+          this.#app = app;
+          this.week = week;
+          this.day = day;
+        }
+        delete() { this.#app.deleteEvent(this); } // Removes this event from the app
+        edit() { // Triggers an edit for this event
+          this.#app.editEvent(this);
+        }
+        static Times = [...new Array(24)]
+          .map((_,i) => (i%12)||12)
+          .flatMap(v => [`${v}:00`,`${v}:30`])
+          .map((v,i) => `${v}${i<24?'a':'p'}`);
+      }
+
+      class Dialog { // A generic structure for templating dialogs on the page
+        data; // The data the dialog view can map from
+        #complete; // Called when the dialog either submits or cancels
+        constructor(data, complete) {
+          this.data = data;
+          this.#complete = complete;
+        }
+        submit(e) { // Reads the FormData from the dialog and sends it back to the dialog creator
+          e.preventDefault();
+          this.#complete(Array
+            .from(new FormData(e.target).entries())
+            .reduce((data,entry) =>
+              ((entry[0] in data)
+                ? (Array.isArray(data[entry[0]])
+                  ? data[entry[0]].push(entry[1])
+                  : data[entry[0]] = [data[entry[0]], entry[1]])
+                : data[entry[0]] = entry[1]) && data || data,
+              {}
+            )
+          );
+        }
+        cancel(e) { this.#complete(); } // returns nothing to the dialog creator indicating a cancel
+      }
+    </script>
+    <script id="js-bootstrap">
+      new Application(document);
+    </script>
+  </body>
+</body>
