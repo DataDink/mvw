@@ -44,7 +44,7 @@
         background-repeat: no-repeat;
         background-size: 100vmax auto;
       }
-      @media (min-width: 129.411764705882307vmin /* calc(var(--portrait-limit)*100vmin) */ ) {
+      @media (min-width: /* calc(var(--portrait-limit)*100vmin) */ 129.411764705882307vmin) {
         html { font-size: 1vmin; }
         body {
           width: calc(var(--portrait-limit)*100vmin); height: 100vmin;
@@ -668,10 +668,10 @@
             inches: `11x${formatNumber(11*ratio)}`,
           },
           grid: {
-            top: `${formatNumber(caltop.y/page.height*100)}%`,
-            bottom: `${formatNumber(calbottom.bottom/page.height*100)}%`,
-            left: `${formatNumber(caltop.x/page.width*100)}%`,
-            right: `${formatNumber(caltop.right/page.width*100)}%`
+            top: `${formatNumber((caltop.y-page.y)/page.height*100)}%`,
+            bottom: `${formatNumber((calbottom.height-page.y)/page.height*100)}%`,
+            left: `${formatNumber((caltop.x-page.x)/page.width*100)}%`,
+            right: `${formatNumber((caltop.right-page.x)/page.width*100)}%`
           }
         })
       })();
