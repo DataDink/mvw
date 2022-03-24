@@ -1,0 +1,444 @@
+<html>
+  <head>
+    <style id="css-fonts">
+    </style>
+    <style id="css-layout">
+      :root {
+        --size: 1vmin;
+        --color: #784000;
+        --border: .4vmin solid var(--color);
+      }
+      * { box-sizing: border-box; }
+      html {
+        display: flex;
+        flex-direction: column;
+        position: absolute;
+        left: 0; right: 0;
+        top: 0; bottom: 0;
+        margin: 0; padding: 0;
+        justify-content: flex-start;
+        align-content: center;
+        align-items: center;
+        font-size: 1vmin;
+      }
+      body {
+        display: flex;
+        width: 100vmin; height: auto;
+        flex-direction: column;
+        justify-content: stretch;
+        align-content: stretch;
+        align-items: stretch;
+        background: #E8E0D0;
+        color: var(--color);
+        margin: 0; padding: 1em 0;
+      }
+      body > header {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-content: center;
+        align-items: center;
+      }
+      menu {
+        list-style: none;
+        display: flex;
+        flex-direction: row;
+        justify-content: stretch;
+        align-content: stretch;
+        align-items: stretch;
+        margin: 0; padding: 0;
+      }
+      .items {
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-content: stretch;
+        align-items: stretch;
+        margin: 0; padding: 0;
+      }
+      .item, .columns {
+        list-style: none;
+        display: flex;
+        flex-direction: row;
+        justify-content: stretch;
+        align-content: stretch;
+        align-items: stretch;
+        margin: 0; padding: .5rem 0;
+      }
+      .item .actions, .columns .actions { width: 7rem; }
+      .item .time, .columns .time { width: 15rem; }
+      .item .name, .columns .name { flex: 1; }
+      .item .metric, .columns .metric { width: 10rem; }
+      .columns > li {
+        border: var(--border);
+        border-color: transparent;
+      }
+      input {
+        display: block;
+        margin: 0; padding: .2rem .5rem;
+      }
+    </style>
+    <style id="css-content">
+      h1,h2,h3,h4,h5,h6 {
+        text-align: center;
+        margin: 0; padding: 0;
+      }
+      h1 { font-size: 3rem; }
+      h2 { font-size: 2.75rem; }
+      h3 { font-size: 2.5rem; }
+      h4{ font-size: 2.25rem; }
+      h5 { font-size: 2rem; }
+      h6 { font-size: 1.75rem; }
+      body > header {
+        border-bottom: var(--border);
+      }
+      button {
+        background: transparent;
+        border: var(--border);
+        border-radius: .5em;
+        margin: 0 .2em; padding: 0 .5em;
+        color: var(--color);
+      }
+      button.safe { background: rgba(128,255,128,.5); }
+      button.warning { background: rgba(255,255,128,.5); }
+      button.danger { background: rgba(255,128,128,.5); }
+      menu > button {
+        font-size: 2rem;
+      }
+      input {
+        display: block;
+        background: transparent;
+        border: var(--border);
+        border-radius: .4em;
+        outline: none;
+        color: var(--color);
+      }
+      .item, .columns {
+        font-size: 2.5rem;
+      }
+    </style>
+    <style id="css-application">
+      [data-onclick] { cursor: pointer; }
+    </style>
+  </head>
+  <body>
+    <header>
+      <menu>
+        <button data-onclick="downyear" title="previous year">&lt;&lt;&lt;&lt;</button>
+        <button data-onclick="downmonth" title="previous month">&lt;&lt;&lt;</button>
+        <button data-onclick="downactivity" title="previous activity">&lt;&lt;</button>
+        <button data-onclick="downday" title="previous page">&lt;</button>
+      </menu>
+      <h1 data-onclick="today" title="click to return to today's page">
+        <span data-textContent="dayName"></span>,
+        <span data-textContent="monthName"></span>
+        <span data-textContent="day"></span>
+        <span data-textContent="year"></span>
+      </h1>
+      <menu>
+        <button data-onclick="upday" title="next page">&gt;</button>
+        <button data-onclick="upactivity" title="next activity">&gt;&gt;</button>
+        <button data-onclick="upmonth" title="next month">&gt;&gt;&gt;</button>
+        <button data-onclick="upyear" title="next year">&gt;&gt;&gt;&gt;</button>
+      </menu>
+    </header>
+    <main>
+      <header>
+        <ul class="columns">
+          <li class="actions"></li>
+          <li class="time">Time</li>
+          <li class="name">Food</li>
+          <template data-template="metrics">
+            <li class="metric" data-textContent="name"></li>
+          </template>
+        </ul>
+      </header>
+      <ul class="items">
+        <template data-template="page">
+          <li class="item">
+            <menu class="actions">
+              <button class="danger" type="button" data-onclick="remove">x</button>
+            </menu>
+            <input class="time" name="time" type="text" data-attribute-value="time" data-onchange="reschedule" list="times" autocomplete="off"/>
+            <input class="name" name="name" type="text" data-attribute-value="name" data-onchange="rename" list="item-names" autocomplete="off"/>
+            <template data-template="metricsView">
+              <input class="metric" data-attribute-name="index" data-attribute-value="value" data-onchange="edit" autocomplete="off"/>
+            </template>
+          </li>
+        </template>
+      </ul>
+      <menu>
+        <button class="safe" type="button" data-onclick="createItem">+</button>
+      </menu>
+    </main>
+    <datalist id="item-names">
+      <template data-template="names">
+        <option data-attribute-value="name" />
+      </template>
+    </datalist>
+    <datalist id="times">
+      <template data-template="times">
+        <option data-attribute-value="text" />
+      </template>
+    </datalist>
+    <script id="js-mvw">
+      // https://github.com/DataDink/mvw
+      // version 1.0.1
+      (() => {(()=>{const e=/^data\-/i,t=Symbol(" _mapping scope_ ");Node.prototype.map=function(r){var n=this,a=arguments[1]||n[t]||(n[t]={});if(a===(n[t]||(n[t]=a)))return Array.from(n.attributes||[]).filter((t=>e.test(t.name))).forEach((t=>{var a=new ObjectQuery(r,t.value,!1),i="function"==typeof a.value?a.value.bind(a.binding):a.value,o=t.name.replace(e,"").replace(/\-+/g,".");new ObjectQuery(n,o,!0).value=i})),Array.from(n.childNodes).forEach((e=>e.map(r,a))),n}})();class ObjectQuery{complete;binding;property;get value(){if(this.complete)return this.binding[this.property]}set value(e){this.complete&&(this.binding[this.property]=e)}constructor(e,t,r=!1){for(var n=Array.from(t.matchAll(/[^\.]+/g)).map((e=>e[0]));null!=e&&n.length;)this.property=r?ObjectQuery.#e(e,n.shift()):n.shift(),e=(this.binding=e)[this.property];this.complete=!n.length&&null!=this.binding}static#e(e,t){if(t in e)return t;for(var r=t.toLowerCase();null!=e;){var n=Object.getOwnPropertyNames(e).find((e=>e.toLowerCase()===r));if(null!=n)return n;e=Object.getPrototypeOf(e)}return t}}Object.defineProperty(HTMLElement.prototype,"attribute",{configurable:!1,enumerable:!0,get:function(){var e=this;return new Proxy({},{has:(t,r)=>e.hasAttribute(r),get:(t,r)=>!!e.hasAttribute(r)&&e.getAttribute(r),set:(t,r,n)=>null!=n&&!1!==n?e.setAttribute(r,!0===n?r:n)||!0:e.removeAttribute(r)||!0,ownKeys:()=>Array.from(e.attributes).map((e=>e.name))})}}),Object.defineProperty(HTMLElement.prototype,"class",{configurable:!1,enumerable:!0,get:function(){var e=this;return new Proxy({},{has:(t,r)=>e.classList.contains(r),get:(t,r)=>e.classList.contains(r),set:(t,r,n)=>e.classList.remove(r)||!!n&&e.classList.add(r)||!0,ownKeys:()=>Array.from(e.classList)})}}),(()=>{const e=Symbol(" _template cleanup_ ");Object.defineProperty(HTMLTemplateElement.prototype,"template",{configurable:!1,enumerable:!1,get:function(){return this.content.cloneNode(!0)},set:function(t){var r=this;if(e in r&&r[e](),r.parentNode){var n=(Array.isArray(t)?t:[t]).filter((e=>null!=e)).map((e=>r.template.map(e))).flatMap((e=>Array.from(e.childNodes)));r[e]=()=>{n.forEach((e=>e.parentNode&&e.parentNode.removeChild(e))),delete r[e]},r.parentNode.insertBefore(n.reduce(((e,t)=>e.appendChild(t)&&e),document.createDocumentFragment()),r.nextSibling)}}})})();})();
+    </script>
+    <script id="js-extension">
+      Object.configure = (target, source) => // assigns only pre-existing values to the target from the source
+        Object.keys(source||{})
+              .forEach(k => (k in target) && (target[k] = source[k]));
+
+      String.compare = function(a, b) { // Semi-fuzzy comparison of what portion of a string is in another.
+        var normalized = [a, b]
+          .map(v => typeof(v) === 'string' ? v : v != null ? target.toString() : '')
+          .map(v => v.toLowerCase().replace(/[^a-z]/gi, ''))
+          .sort((a,b) => a.length>b.length?1:-1);
+        if (normalized.some(v => v.length === 0)) { return 0; }
+        var aux = normalized[0];
+        var basis = normalized[1];
+        for (var length = aux.length; length > 0; length--) {
+          for (var start = 0; start <= aux.length-length; start++) {
+            var segment = aux.substr(start, length);
+            if (basis.indexOf(segment) >= 0) {
+              return length/basis.length;
+            }
+          }
+        }
+        return 0;
+      };
+      Date.prototype.getTime = function() {
+        return `${this.getHours()%12||12}:${(this.getMinutes()/100).toFixed(2).substr(2)}${this.getHours()<12?'a':'p'}`;
+      }
+      Date.prototype.setTime = function(time) {
+        var parse = /(?<hour>\d+)\s*:\s*(?<min>\d+)[^a-z0-9]*(?<mer>a|p)?/g.exec(time.toLowerCase());
+        if (!parse) { return; }
+        this.setHours((parse.groups.mer ? parseInt(parse.groups.hour)%12 : parseInt(parse.groups.hour)) + parse.groups.mer==='p' ? 12 : 0);
+        this.setMinutes(parseInt(parse.groups.min)%60);
+      }
+      Date.prototype.getMonthName = function() {
+        return ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'][this.getMonth()];
+      }
+      Date.prototype.getDayName = function() {
+        return ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'][this.getDay()];
+      }
+    </script>
+    <script id="js-application">
+      class Application {
+        #view; // The bound DOM Node
+        #data = new Cache('foodbook'); // Session persistence
+
+        get times() { // suggested times
+          var increment = .5;
+          return [...new Array(24/increment)]
+            .map((_,i) => i*increment)
+            .map(hour => { return { text: new Date(0,0,0,Math.floor(hour),(hour%1)*60).getTime() }; });
+        }
+
+        #date = new Date(); // The current page being viewed
+        get year() { return this.#date.getFullYear(); }
+        get month() { return this.#date.getMonth(); }
+        get monthName() { return this.#date.getMonthName(); }
+        get day() { return this.#date.getDate(); }
+        get weekday() { return this.#date.getDay(); }
+        get dayName() { return this.#date.getDayName(); }
+        downyear() { this.#date.setYear(this.#date.getFullYear()-1); this.refresh(); } // Go to the same page in the previous year
+        downmonth() { this.#date.setMonth(this.#date.getMonth()-1); this.refresh(); } // Go to the same page in the previous month
+        downactivity() { this.refresh(); } // Go to the previous page with activity
+        downday() { this.#date.setDate(this.#date.getDate()-1); this.refresh(); } // Go to the previous page
+        today() { this.#date = new Date(); this.refresh(); } // Return to today's page
+        upday() { this.#date.setDate(this.#date.getDate()+1); this.refresh(); } // Go to the next page
+        upactivity() { this.refresh(); } // Go to the next page with activity
+        upmonth() { this.#date.setMonth(this.#date.getMonth()+1); this.refresh(); } // Go to the same page in the next month
+        upyear() { this.#date.setYear(this.#date.getFullYear()+1); this.refresh(); } // Go to the same page in the next year
+
+        get #metrics() {  // The metrics used in this FoodBook
+          return this.#data.metrics||(this.#data.metrics=[new Metric({name: 'cal'})]);
+        }
+        get metrics() {  // Models of the metrics used in this FoodBook
+          return this.#metrics
+            .map(cache => new ViewModel(
+              new Metric(cache),
+              {
+                rename: e => {
+                  cache.name = e.target.value;
+                  this.update();
+                },
+                remove: () => this.removeMetric(cache)
+              }
+            ))
+            .sort((a,b) => a.sort>b.sort?1:-1);
+        }
+        createMetric() { // Creates a new metric for this FoodBook
+          this.#metrics.push(new Metric({name: '?'}));
+          this.#items.forEach(item => item.metrics.push('0'));
+          this.update();
+        }
+        removeMetric(cache) {
+          var index = this.#metrics.indexOf(cache);
+          this.#items.forEach(item => item.metrics.splice(index,1));
+          this.#metrics.splice(index, 1);
+          this.update();
+        }
+
+        #createItemModel(cache) { return new ViewModel(
+          new Item(cache),
+          {
+            rename: e => {
+              var existing = this.#items
+                .filter(i => i.name === e.target.value)
+                .sort((a,b) => a.date>b.date?-1:1)[0];
+              if (existing) {
+                cache.metrics = existing.metrics;
+              }
+              cache.name = e.target.value;
+              this.update();
+            },
+            remove: () => this.removeItem(cache),
+            reschedule: e => {
+              cache.time = e.target.value;
+              this.update();
+            },
+            metricsView: this.#metrics
+              .map((name,index) => { return {
+                name: name,
+                index: index,
+                value: cache.metrics[index] || 0,
+                edit: e => {
+                  cache.metrics[index] = e.target.value;
+                  this.update();
+                }
+              }; })
+          }
+        ); }
+        get #items() { // The items recorded in this FoodBook
+          return (this.#data.items||(this.#data.items=[]));
+        }
+        get items() { // Models of the items recorded in this FoodBook
+          return this.#items
+            .map(cache => this.#createItemModel(cache))
+            .sort((a,b) => a.sort>b.sort?1:-1);
+        }
+
+        get #page() { // The items for today's page
+          return this.#items
+            .filter(i =>
+              i.date >= new Date(this.year, this.month, this.day)
+              && i.date <= new Date(this.year, this.month, this.day+1)
+            );
+        }
+        get page() { // Models around the items for today's page
+          return this.#page
+            .map(cache => this.#createItemModel(cache))
+            .sort((a,b) => a.sort>b.sort?1:-1);
+        }
+
+
+        get names() { // All item names sorted by popularity
+          var now = Date.now();
+          var index = Array
+            .from(new Set(this.#items.map(item => item.name)))
+            .reduce((names, name) => {
+              var matches = this.#items.filter(item => String.compare(item.name, name) > .75);
+              var recurrence = matches.map(item => item.date/now).reduce((t,v) => t+v, 0);
+              var weight = recurrence/this.#items.length;
+              names[name] = weight;
+              return names;
+            }, {});
+          return Object.keys(index)
+            .sort((a,b) => index[a]>index[b]?-1:1)
+            .map(name => { return {name: name}; });
+        }
+
+
+        createItem() {
+          this.#items.push(new Item({
+            metrics: this.#metrics.map(() => '0'),
+            date: new Date(
+              this.year,
+              this.month,
+              this.day,
+              new Date().getHours()
+            ).valueOf()
+          }));
+          this.update();
+        }
+        removeItem(item) {
+          this.#data.items = this.#data.items.filter(i => i !== item);
+          this.update();
+        }
+
+        constructor(view) {
+          this.#view = view;
+          this.refresh();
+        }
+        refresh() { this.#view.map(this); }
+        update() {
+          this.#data.lastUpdate = Date.now();
+          this.refresh();
+        }
+      }
+
+      class Cache {
+        constructor(index) {
+          Object.assign(this, JSON.parse(localStorage.getItem(index)||'{}'));
+          return new Proxy(this, {
+            has: (_, key) => key in this,
+            ownKeys: () => Object.getOwnPropertyNames(this),
+            getPrototypeOf: () => Object.getPrototypeOf(this),
+            get: (_, key) => this[key],
+            set: (_, key, value) => {
+              this[key] = value;
+              localStorage.setItem(index, JSON.stringify(this));
+              return true;
+            }
+          });
+        }
+      }
+
+      class ViewModel {
+        constructor(model, configuration) {
+          return new Proxy(model, {
+            has: (_, key) => (key in model) || (key in configuration),
+            ownKeys: () => Object.getOwnPropertyNames(model).concat(Object.getOwnPropertyNames(configuration)),
+            getPrototypeOf: () => Object.getPrototypeOf(model),
+            get: (_, key) => (key in model) ? model[key] : configuration[key],
+            set: (_, key, value) => {
+              if (key in model) {
+                model[key] = value;
+              } else {
+                configuration[key] = value;
+              }
+              return true;
+            }
+          });
+        }
+      }
+
+      class Metric {
+        name = '';
+        constructor(data) { Object.configure(this, data); }
+      }
+
+      class Item {
+        name = '';
+        date = Date.now();
+        metrics = [];
+        get time() { return new Date(this.date).getTime(); }
+        set time(v) {
+          var date = new Date(this.date);
+          date.setTime(v);
+          this.date = date.valueOf();
+        }
+        get sort() { return -this.date; }
+        constructor(data) { Object.configure(this, data); }
+      }
+    </script>
+    <script id="js-bootstrap">
+      new Application(document);
+    </script>
+  </body>
+</html>
