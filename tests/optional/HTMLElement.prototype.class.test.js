@@ -3,7 +3,7 @@ require('../../dst/mvw.js');
 test('map a class to a boolean', () => {
   var model = {value: true};
   var element = document.createElement('div');
-  element.setAttribute('data-classes-test', 'value');
+  element.setAttribute('data-class-test', 'value');
   element.map(model);
   expect(element.classList.contains('test')).toBe(true);
   model.value = false;
@@ -14,14 +14,14 @@ test('map a class to a boolean', () => {
 test('supports in opperator', () => {
   var element = document.createElement('div');
   element.classList.add('test');
-  expect('test' in element.classes).toBe(true);
-  expect('no' in element.classes).toBe(false);
+  expect('test' in element.class).toBe(true);
+  expect('no' in element.class).toBe(false);
 });
 
 test('supports enumeration', () => {
   var element = document.createElement('div');
   element.classList.add('test');
-  var classes = Object.getOwnPropertyNames(element.classes);
+  var classes = Object.getOwnPropertyNames(element.class);
   expect(Array.isArray(classes)).toBe(true);
   expect(classes.length).toBe(1);
   expect(classes[0]).toBe('test');
@@ -29,8 +29,8 @@ test('supports enumeration', () => {
 
 test('supports setting', () => {
   var element = document.createElement('div');
-  element.classes.test = true;
-  element.classes.no = false;
+  element.class.test = true;
+  element.class.no = false;
   expect(element.classList.contains('test')).toBe(true);
   expect(element.classList.contains('no')).toBe(false);
 });

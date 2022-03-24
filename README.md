@@ -104,8 +104,8 @@ new Application(document.body);
 
 **View**
 ```xml
-<div data-classes-active="value1"></div>
-<div data-classes-active="value2"></div>
+<div data-class-active="value1"></div>
+<div data-class-active="value2"></div>
 ```
 **Model**
 ```javascript
@@ -120,8 +120,8 @@ document.body.map(model);
 ```
 **Result**
 ```xml
-<div class="active" data-classes-active="value1"></div>
-<div data-classes-active="value2"></div>
+<div class="active" data-class-active="value1"></div>
+<div data-class-active="value2"></div>
 ```
 
 ## Mapping an attribute on an element to a boolean on a model
@@ -129,8 +129,8 @@ document.body.map(model);
 
 **View**
 ```xml
-<input type="text" data-settings-disabled="value1" />
-<input type="text" data-settings-disabled="value2" />
+<input type="text" data-attribute-disabled="value1" />
+<input type="text" data-attribute-disabled="value2" />
 ```
 **Model**
 ```javascript
@@ -145,8 +145,8 @@ document.body.map(model);
 ```
 **Result**
 ```xml
-<input type="text" disabled="disabled" data-settings-disabled="value1" />
-<input type="text" data-settings-disabled="value2" />
+<input type="text" disabled="disabled" data-attribute-disabled="value1" />
+<input type="text" data-attribute-disabled="value2" />
 ```
 
 ## Mapping a template to an array of data
@@ -214,6 +214,13 @@ document.body.map(model);
 ```
 
 # Version Notes
+* 1.0.1
+  * Improved naming
+    * HTMLElement.prototype.classes -> Element.prototype.class
+      * Changed to match the non-plural name change of settings to attribute
+      * Less likely to become a future conflict (see (Element.prototype.className)[https://developer.mozilla.org/en-US/docs/Web/API/Element/className])
+    * HTMLElement.prototype.settings -> Element.prototype.attribute
+      * Changed to better reflect the extensions purpose.
 * 1.0.0
   * Hello World
   * Extensions

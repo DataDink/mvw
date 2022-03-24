@@ -1,21 +1,21 @@
 /*
- *  HTMLElement.prototype.classes:
+ *  Element.prototype.class:
  *  Exposes the current classList of an element as boolean
  *  members on an object that can be bound/mapped to
  *
  *  Usage:
- *  <div data-classes-test="model.boolean.value"></div>
+ *  <div data-class-test="model.boolean.value"></div>
  *
  *  Example:
  *  var element = document.createElement('div');
- *  element.classes.test = true; // equiv to element.classList.add('test')
- *  element.classes['hyphenated-class'] = true; // equiv to element.classList.add('hyphenated-class')
- *  element.classes.removed = false; // equiv to element.classList.remove('removed')
+ *  element.class.test = true; // equiv to element.classList.add('test')
+ *  element.class['hyphenated-class'] = true; // equiv to element.classList.add('hyphenated-class')
+ *  element.class.removed = false; // equiv to element.classList.remove('removed')
  *
  *  Result:
  *  <div class="test hyphenated-class"></div>
  */
-Object.defineProperty(HTMLElement.prototype, 'classes', {
+Object.defineProperty(Element.prototype, 'class', {
   configurable: false, enumerable: true,
   get: function() {
     var element = this;

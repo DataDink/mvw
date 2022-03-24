@@ -267,7 +267,7 @@
       }
     </style>
   </head>
-  <body data-classes-leapyear="year.leapyear" data-style-backgroundImage="background" data-ondrop="setBackgroundImage">
+  <body data-class-leapyear="year.leapyear" data-style-backgroundImage="background" data-ondrop="setBackgroundImage">
     <header>
       <div class="no-print">
         <span data-onclick="setBackgroundUrl">drop an image or click here to set background</span>
@@ -296,7 +296,7 @@
       <template data-template="calendar.weeks">
         <ul class="week">
           <template data-template="days">
-            <li class="day" data-settings-disabled="inactive">
+            <li class="day" data-attribute-disabled="inactive">
               <aside class="date">
                 <span data-textContent="date"></span>
                 <button class="tiny safe" data-onclick="createEvent">+</button>
@@ -323,7 +323,7 @@
           <span>Begins:</span>
           <select name="begin" data-value="data.begin">
             <template data-template="data.beginTimes">
-              <option data-textContent="value" data-settings-selected="active"></option>
+              <option data-textContent="value" data-attribute-selected="active"></option>
             </template>
           </select>
         </label>
@@ -331,7 +331,7 @@
           <span>Ends:</span>
           <select name="end" data-value="data.end">
             <template data-template="data.endTimes">
-              <option data-textContent="value" data-settings-selected="active"></option>
+              <option data-textContent="value" data-attribute-selected="active"></option>
             </template>
           </select>
         </label>
@@ -360,8 +360,8 @@
     </template>
     <script id="js-mvw">
       // https://github.com/DataDink/mvw
-      // version 1.0.0
-      (() => {(()=>{const e=/^data\-/i,t=Symbol(" _mapping scope_ ");Node.prototype.map=function(r){var n=this,a=arguments[1]||n[t]||(n[t]={});if(a===(n[t]||(n[t]=a)))return Array.from(n.attributes||[]).filter((t=>e.test(t.name))).forEach((t=>{var a=new ObjectQuery(r,t.value,!1),i="function"==typeof a.value?a.value.bind(a.binding):a.value,o=t.name.replace(e,"").replace(/\-+/g,".");new ObjectQuery(n,o,!0).value=i})),Array.from(n.childNodes).forEach((e=>e.map(r,a))),n}})();class ObjectQuery{complete;binding;property;get value(){if(this.complete)return this.binding[this.property]}set value(e){this.complete&&(this.binding[this.property]=e)}constructor(e,t,r=!1){for(var n=Array.from(t.matchAll(/[^\.]+/g)).map((e=>e[0]));null!=e&&n.length;)this.property=r?ObjectQuery.#e(e,n.shift()):n.shift(),e=(this.binding=e)[this.property];this.complete=!n.length&&null!=this.binding}static#e(e,t){if(t in e)return t;for(var r=t.toLowerCase();null!=e;){var n=Object.getOwnPropertyNames(e).find((e=>e.toLowerCase()===r));if(null!=n)return n;e=Object.getPrototypeOf(e)}return t}}Object.defineProperty(HTMLElement.prototype,"classes",{configurable:!1,enumerable:!0,get:function(){var e=this;return new Proxy({},{has:(t,r)=>e.classList.contains(r),get:(t,r)=>e.classList.contains(r),set:(t,r,n)=>e.classList.remove(r)||!!n&&e.classList.add(r)||!0,ownKeys:()=>Array.from(e.classList)})}}),Object.defineProperty(HTMLElement.prototype,"settings",{configurable:!1,enumerable:!0,get:function(){var e=this;return new Proxy({},{has:(t,r)=>e.hasAttribute(r),get:(t,r)=>!!e.hasAttribute(r)&&e.getAttribute(r),set:(t,r,n)=>null!=n&&!1!==n?e.setAttribute(r,!0===n?r:n)||!0:e.removeAttribute(r)||!0,ownKeys:()=>Array.from(e.attributes).map((e=>e.name))})}}),(()=>{const e=Symbol(" _template cleanup_ ");Object.defineProperty(HTMLTemplateElement.prototype,"template",{configurable:!1,enumerable:!1,get:function(){return this.content.cloneNode(!0)},set:function(t){var r=this;if(e in r&&r[e](),r.parentNode){var n=(Array.isArray(t)?t:[t]).filter((e=>null!=e)).map((e=>r.template.map(e))).flatMap((e=>Array.from(e.childNodes)));r[e]=()=>{n.forEach((e=>e.parentNode&&e.parentNode.removeChild(e))),delete r[e]},r.parentNode.insertBefore(n.reduce(((e,t)=>e.appendChild(t)&&e),document.createDocumentFragment()),r.nextSibling)}}})})();})();
+      // version 1.0.1
+      (() => {(()=>{const e=/^data\-/i,t=Symbol(" _mapping scope_ ");Node.prototype.map=function(r){var n=this,a=arguments[1]||n[t]||(n[t]={});if(a===(n[t]||(n[t]=a)))return Array.from(n.attributes||[]).filter((t=>e.test(t.name))).forEach((t=>{var a=new ObjectQuery(r,t.value,!1),i="function"==typeof a.value?a.value.bind(a.binding):a.value,o=t.name.replace(e,"").replace(/\-+/g,".");new ObjectQuery(n,o,!0).value=i})),Array.from(n.childNodes).forEach((e=>e.map(r,a))),n}})();class ObjectQuery{complete;binding;property;get value(){if(this.complete)return this.binding[this.property]}set value(e){this.complete&&(this.binding[this.property]=e)}constructor(e,t,r=!1){for(var n=Array.from(t.matchAll(/[^\.]+/g)).map((e=>e[0]));null!=e&&n.length;)this.property=r?ObjectQuery.#e(e,n.shift()):n.shift(),e=(this.binding=e)[this.property];this.complete=!n.length&&null!=this.binding}static#e(e,t){if(t in e)return t;for(var r=t.toLowerCase();null!=e;){var n=Object.getOwnPropertyNames(e).find((e=>e.toLowerCase()===r));if(null!=n)return n;e=Object.getPrototypeOf(e)}return t}}Object.defineProperty(HTMLElement.prototype,"attribute",{configurable:!1,enumerable:!0,get:function(){var e=this;return new Proxy({},{has:(t,r)=>e.hasAttribute(r),get:(t,r)=>!!e.hasAttribute(r)&&e.getAttribute(r),set:(t,r,n)=>null!=n&&!1!==n?e.setAttribute(r,!0===n?r:n)||!0:e.removeAttribute(r)||!0,ownKeys:()=>Array.from(e.attributes).map((e=>e.name))})}}),Object.defineProperty(HTMLElement.prototype,"class",{configurable:!1,enumerable:!0,get:function(){var e=this;return new Proxy({},{has:(t,r)=>e.classList.contains(r),get:(t,r)=>e.classList.contains(r),set:(t,r,n)=>e.classList.remove(r)||!!n&&e.classList.add(r)||!0,ownKeys:()=>Array.from(e.classList)})}}),(()=>{const e=Symbol(" _template cleanup_ ");Object.defineProperty(HTMLTemplateElement.prototype,"template",{configurable:!1,enumerable:!1,get:function(){return this.content.cloneNode(!0)},set:function(t){var r=this;if(e in r&&r[e](),r.parentNode){var n=(Array.isArray(t)?t:[t]).filter((e=>null!=e)).map((e=>r.template.map(e))).flatMap((e=>Array.from(e.childNodes)));r[e]=()=>{n.forEach((e=>e.parentNode&&e.parentNode.removeChild(e))),delete r[e]},r.parentNode.insertBefore(n.reduce(((e,t)=>e.appendChild(t)&&e),document.createDocumentFragment()),r.nextSibling)}}})})();})();
     </script>
     <script id="js-application">
       class Application {
@@ -647,7 +647,7 @@
     </script>
     <script id="js-bootstrap">
       new Application(document);
-      (() => {
+      (() => { // Page sizing information dumped to console to assist with asset creation
         function formatNumber(number) {
           return (Math.round(number*1000)/1000).toString().replace(/(\.\d{1,3})\d*$/, '$1');
         }

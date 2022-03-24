@@ -1,21 +1,21 @@
 /*
- *  HTMLElement.prototype.settings:
+ *  Element.prototype.attribute:
  *  Exposes the current attributes of an element as
  *  members on an object that can be bound/mapped to
  *
  *  Usage:
- *  <div data-settings-disabled="model.boolean.value"></div>
+ *  <div data-attribute-disabled="model.boolean.value"></div>
  *
  *  Example:
  *  var element = document.createElement('div');
- *  element.settings.test = true; // equiv to element.setAttribute('test', 'test');
- *  element.settings['hyphenated-attribute'] = 'value'; // equiv to element.setAttribute('hyphenated-attribute', 'value')
- *  element.settings.removed = false; // equiv to element.removeAttribute('removed')
+ *  element.attribute.test = true; // equiv to element.setAttribute('test', 'test');
+ *  element.attribute['hyphenated-attribute'] = 'value'; // equiv to element.setAttribute('hyphenated-attribute', 'value')
+ *  element.attribute.removed = false; // equiv to element.removeAttribute('removed')
  *
  *  Result:
  *  <div test="test" hyphenated-attribute="value"></div>
  */
-Object.defineProperty(HTMLElement.prototype, 'settings', {
+Object.defineProperty(Element.prototype, 'attribute', {
   configurable: false, enumerable: true,
   get: function() {
     var element = this;

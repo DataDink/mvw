@@ -3,7 +3,7 @@ require('../../dst/mvw.js');
 test('map an attribute to a boolean', () => {
   var model = {value: true};
   var element = document.createElement('div');
-  element.setAttribute('data-settings-test', 'value');
+  element.setAttribute('data-attribute-test', 'value');
   element.map(model);
   expect(element.hasAttribute('test')).toBe(true);
   model.value = false;
@@ -14,7 +14,7 @@ test('map an attribute to a boolean', () => {
 test('supports enumeration', () => {
   var element = document.createElement('div');
   element.setAttribute('test', 'test');
-  var attributes = Object.getOwnPropertyNames(element.settings);
+  var attributes = Object.getOwnPropertyNames(element.attribute);
   expect(Array.isArray(attributes)).toBe(true);
   expect(attributes.length).toBe(1);
   expect(attributes[0]).toBe('test');
@@ -22,14 +22,14 @@ test('supports enumeration', () => {
 
 test('false when missing', () => {
   var element = document.createElement('div');
-  expect(element.settings.no).toBe(false);
+  expect(element.attribute.no).toBe(false);
 });
 
 test('supports in', () => {
   var element = document.createElement('div');
   element.setAttribute('test', 'value');
-  expect('test' in element.settings).toBe(true);
-  expect('no' in element.settings).toBe(false);
+  expect('test' in element.attribute).toBe(true);
+  expect('no' in element.attribute).toBe(false);
 });
 
 test('removes when undefined, null, false', () => {
@@ -37,32 +37,32 @@ test('removes when undefined, null, false', () => {
   element.setAttribute('undefined', 'undefined');
   element.setAttribute('null', 'null');
   element.setAttribute('false', 'false');
-  element.settings.undefined = undefined;
+  element.attribute.undefined = undefined;
   expect(element.hasAttribute('undefined')).toBe(false);
   expect(element.hasAttribute('null')).toBe(true);
   expect(element.hasAttribute('false')).toBe(true);
-  element.settings.null = null;
+  element.attribute.null = null;
   expect(element.hasAttribute('null')).toBe(false);
-  element.settings.false = false;
+  element.attribute.false = false;
   expect(element.hasAttribute('false')).toBe(false);
 });
 
 test('adds when falsy', () => {
   var element = document.createElement('div');
-  element.settings.empty = '';
+  element.attribute.empty = '';
   expect(element.hasAttribute('empty')).toBe(true);
-  element.settings.zero = 0;
+  element.attribute.zero = 0;
   expect(element.hasAttribute('zero')).toBe(true);
 });
 
 test('adds name when true', () => {
   var element = document.createElement('div');
-  element.settings.test = true;
+  element.attribute.test = true;
   expect(element.getAttribute('test')).toBe('test');
 });
 
 test('adds value when string', () => {
   var element = document.createElement('div');
-  element.settings.test = 'value';
+  element.attribute.test = 'value';
   expect(element.getAttribute('test')).toBe('value');
 });
