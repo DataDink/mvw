@@ -73,10 +73,23 @@
       .columns > li {
         border: var(--border);
         border-color: transparent;
+        position: relative;
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-start;
+        align-content: center;
+        align-items: center;
       }
       input {
         display: block;
+        font-size: 3rem;
         margin: 0; padding: .2rem .5rem;
+      }
+      .columns input {
+        font-size: inherit;
+        border: none;
+        width: 1.75em;
+        padding: 0; margin: 0;
       }
     </style>
     <style id="css-content">
@@ -97,15 +110,15 @@
         background: transparent;
         border: var(--border);
         border-radius: .5em;
-        margin: 0 .2em; padding: 0 .5em;
+        font-size: 2.5rem;
+        margin: 0 .05em; padding: 0 .5em;
         color: var(--color);
       }
       button.safe { background: rgba(128,255,128,.5); }
       button.warning { background: rgba(255,255,128,.5); }
       button.danger { background: rgba(255,128,128,.5); }
-      menu > button {
-        font-size: 2rem;
-      }
+      button.small { font-size: 2rem; }
+      button.tiny { font-size: 1rem; }
       input {
         display: block;
         background: transparent;
@@ -150,7 +163,11 @@
           <li class="time">Time</li>
           <li class="name">Food</li>
           <template data-template="metrics">
-            <li class="metric" data-textContent="name"></li>
+            <li class="metric">
+              <input type="text" data-attribute-value="name" data-onchange="rename" />
+              <button type="button" class="danger tiny" data-onclick="remove">x</button>
+              <button type="button" class="safe tiny" data-onclick="insert">+</button>
+            </li>
           </template>
         </ul>
       </header>
@@ -158,7 +175,7 @@
         <template data-template="page">
           <li class="item">
             <menu class="actions">
-              <button class="danger" type="button" data-onclick="remove">x</button>
+              <button class="danger small" type="button" data-onclick="remove">x</button>
             </menu>
             <input class="time" name="time" type="text" data-attribute-value="time" data-onchange="reschedule" list="times" autocomplete="off"/>
             <input class="name" name="name" type="text" data-attribute-value="name" data-onchange="rename" list="item-names" autocomplete="off"/>
@@ -169,7 +186,7 @@
         </template>
       </ul>
       <menu>
-        <button class="safe" type="button" data-onclick="createItem">+</button>
+        <button class="safe small" type="button" data-onclick="createItem">+</button>
       </menu>
     </main>
     <datalist id="item-names">
@@ -216,8 +233,10 @@
       Date.prototype.setTime = function(time) {
         var parse = /(?<hour>\d+)\s*:\s*(?<min>\d+)[^a-z0-9]*(?<mer>a|p)?/g.exec(time.toLowerCase());
         if (!parse) { return; }
-        this.setHours((parse.groups.mer ? parseInt(parse.groups.hour)%12 : parseInt(parse.groups.hour)) + parse.groups.mer==='p' ? 12 : 0);
-        this.setMinutes(parseInt(parse.groups.min)%60);
+        var hour = (parse.groups.mer ? parseInt(parse.groups.hour)%12 : parseInt(parse.groups.hour)) + (parse.groups.mer==='p' ? 12 : 0);
+        this.setHours(hour);
+        var min = parseInt(parse.groups.min)%60;
+        this.setMinutes(min);
       }
       Date.prototype.getMonthName = function() {
         return ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'][this.getMonth()];
@@ -260,28 +279,32 @@
         }
         get metrics() {  // Models of the metrics used in this FoodBook
           return this.#metrics
-            .map(cache => new ViewModel(
+            .map((cache, index) => new ViewModel(
               new Metric(cache),
               {
+                insert: () => {
+                  this.#metrics.splice(index+1, 0, new Metric({
+                    name: 'val'
+                  }));
+                  this.#items.forEach(item =>
+                    item.metrics.splice(index+1, 0, 0)
+                  );
+                  this.update();
+                },
                 rename: e => {
                   cache.name = e.target.value;
                   this.update();
                 },
-                remove: () => this.removeMetric(cache)
+                remove: () => {
+                  this.#metrics.splice(index, 1);
+                  this.#items.forEach(item =>
+                    item.metrics.splice(index, 1)
+                  );
+                  this.update();
+                }
               }
             ))
             .sort((a,b) => a.sort>b.sort?1:-1);
-        }
-        createMetric() { // Creates a new metric for this FoodBook
-          this.#metrics.push(new Metric({name: '?'}));
-          this.#items.forEach(item => item.metrics.push('0'));
-          this.update();
-        }
-        removeMetric(cache) {
-          var index = this.#metrics.indexOf(cache);
-          this.#items.forEach(item => item.metrics.splice(index,1));
-          this.#metrics.splice(index, 1);
-          this.update();
         }
 
         #createItemModel(cache) { return new ViewModel(
@@ -403,7 +426,7 @@
         constructor(model, configuration) {
           return new Proxy(model, {
             has: (_, key) => (key in model) || (key in configuration),
-            ownKeys: () => Object.getOwnPropertyNames(model).concat(Object.getOwnPropertyNames(configuration)),
+            ownKeys: () => Object.getOwnPropertyNames(model),
             getPrototypeOf: () => Object.getPrototypeOf(model),
             get: (_, key) => (key in model) ? model[key] : configuration[key],
             set: (_, key, value) => {
@@ -433,7 +456,7 @@
           date.setTime(v);
           this.date = date.valueOf();
         }
-        get sort() { return -this.date; }
+        get sort() { return this.date; }
         constructor(data) { Object.configure(this, data); }
       }
     </script>
