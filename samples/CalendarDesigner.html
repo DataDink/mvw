@@ -404,7 +404,8 @@
             if (data) {
               event.begin = data.begin;
               event.end = data.end;
-              event.text = data.text;
+              event.text = data.text
+                .replace(/_/g, '\xa0');
             }
             this.refresh();
             return data;
