@@ -204,25 +204,36 @@
         margin-block: 0;
         margin-inline: 0;
         padding-inline: 0;
+        text-indent: 0;
         padding: 0 .25em .25em .25em;
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-content: stretch;
+        align-items: stretch;
       }
-      .events .time {
+      .event {
         margin: 0; padding: 0;
+        padding-bottom: .5em;
         margin-block: 0;
-        margin-inline: 0;
         padding-inline: 0;
-        margin-right: .25em;
+        text-indent: 0;
+        display: block;
+        line-height: .75em;
+      }
+      .event button {
         display: block;
         float: left;
-        clear: left;
       }
-      .events .description {
+      .event .time {
         margin: 0; padding: 0;
-        margin-block: 0;
-        margin-inline: 0;
-        padding-inline: 0;
         display: block;
-        clear: right;
+        text-align: center;
+      }
+      .event .description {
+        margin: 0; padding: 0;
+        display: block;
         text-align: center;
       }
       .events .description::after {
@@ -262,7 +273,7 @@
     <style id="css-print">
       @media print{
         @page {size: landscape}
-        button { display: none; }
+        button { display: none !important; }
         .no-print { display: none; }
       }
     </style>
@@ -301,15 +312,17 @@
                 <span data-textContent="date"></span>
                 <button class="tiny safe" data-onclick="createEvent">+</button>
               </aside>
-              <dl class="events">
+              <ul class="events">
                 <template data-template="events">
-                  <dt class="time">
+                  <li class="event">
                     <button class="tiny danger" data-onclick="delete">x</button>
-                    <span data-textContent="begin" data-onclick="edit"></span>-<span data-textContent="end" data-onclick="edit"></span>:
-                  </dt>
-                  <dd class="description" data-textContent="text" data-onclick="edit"></dd>
+                    <span class="description" data-textContent="text" data-onclick="edit"></span>
+                    <div class="time" data-onclick="edit">
+                      <span data-textContent="begin"></span>-<span data-textContent="end"></span>
+                    </div>
+                  </li>
                 </template>
-              </dl>
+              </ul>
             </li>
           </template>
         </ul>
