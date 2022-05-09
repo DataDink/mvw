@@ -26,7 +26,7 @@ declarative, attribute-driven mapping/binding between elements and models.
 * Scalability: Beyond the scope of this project
 * Support: Not likely, this was an experiment.
 
-# Problem
+**Problem Being Solved**
 *The only real missing piece to the DOM is a good method for declaratively binding it to a model*
 <img src="Problem.jpg" style="width: 50%;" />
 
