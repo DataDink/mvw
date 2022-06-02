@@ -1,4 +1,4 @@
-<html ondragover="event.preventDefault()" ondrop="event.preventDefault()">
+<html ondragover="event.preventDefault()" data-ondrop="setBackgroundImage">
   <head>
     <style id="css-fonts">
       @import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative&family=League+Gothic:wdth@90&family=Lexend+Peta&family=Roboto+Condensed:wght@300&display=swap');
@@ -278,12 +278,14 @@
       }
     </style>
   </head>
-  <body data-class-leapyear="year.leapyear" data-style-backgroundImage="background" data-ondrop="setBackgroundImage">
+  <body data-class-leapyear="year.leapyear" data-style-backgroundImage="background">
     <header>
       <div class="no-print">
         <span data-onclick="setBackgroundUrl">drop an image or click here to set background</span>
-        •
-        <span data-onclick="resetCache">click here to reset everything</span>
+        <!--
+          •
+          <span data-onclick="resetCache">click here to reset everything</span>
+        -->
       </div>
       <h1>
         <button class="huge" data-onclick="year.previous">&lt;&lt;</button>
