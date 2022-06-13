@@ -68,3 +68,9 @@ test('remaps unscoped', () => {
   container.map({value: 10});
   expect(unscoped.value).toBe(10);
 });
+
+test('repath styles', () => {
+  expect(
+    Node.prototype.map.repath(document.body, 'data-style-backgroundimage', Node.Scope.create(document.body))
+  ).toBe('style.backgroundImage');
+});

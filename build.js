@@ -2,6 +2,8 @@ const fs = require('fs');
 const path = require('path');
 const {minify} = require('terser');
 
+const package = JSON.parse(fs.readFileSync('./package.json').toString());
+
 const directories = [
   './src/required/',
   './src/optional/'
@@ -21,13 +23,17 @@ const contents = files
 
 !fs.existsSync('dst') && fs.mkdirSync('dst');
 
+const header = `console.log("https://github.com/DataDink/mvw v${package.version}");`
+             + '\n(() => {';
+const footer = '})();';
+
 fs.writeFileSync(
   './dst/mvw.js',
-  `(() => {\n${contents}\n})();`
+  `${header}${contents}${footer}`
 );
 
 minify(contents)
   .then(out => fs.writeFileSync(
     './dst/mvw.minified.js',
-    `(() => {${out.code}})();`)
-  );
+    `${header}${out.code}${footer}`
+  ));

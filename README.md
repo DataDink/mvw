@@ -17,14 +17,14 @@ declarative, attribute-driven mapping/binding between elements and models.
 * Tiny
 * Clean
 * Declarative
-* Unoppinionated
+* Unopinionated
 * Embraces the Web
 * Targets light projects (no overhead, quick startup)
 
 **Cons:**
 * Performance: Enough for lightweight projects
 * Scalability: Beyond the scope of this project
-* Support: Not likely, this was an experiment.
+* Support: Unlikely, this was an experiment.
 
 **Problem Being Solved:**
 
@@ -59,12 +59,12 @@ document.body.map(model);
 
 **View**
 ```xml
-<div data-onclick="handler">click me</div><!-- equiv to div.onclick = model.handler -->
+<div data-onclick="handler(textContent)">click me</div><!-- equiv to div.onclick = model.handler -->
 ```
 **Model**
 ```javascript
 var model = {
-  handler: e => alert('clicked')
+  handler: value => alert(value)
 }
 ```
 **Bootstrap**
@@ -219,6 +219,26 @@ document.body.map(model);
 ```
 
 # Version Notes
+* 1.1
+  * Preformance Pass
+    * Increased performance at the expense of a bump to caching on elements
+    * Switched some RegExp to quicker, manual parsing
+  * Support for parameter selectors
+    * Selectors can now have parameter statements to define values passed to handlers
+    * Example: `<input name="field" data-onclick="member1.member2(name, value, value.length)">`
+  * Added configurability
+    * attributePrefix: ('data-') The prefix used to identify mapping attributes
+    * attributeDelimiter: ('-') The character used for separating properties in an attribute name
+    * memberDelimiter: ('.') The character used for separating properties in a selector
+    * selectorDelimiter: ('(') The opening character for parameter queries
+    * parameterDelimiter: (',') The character used for separating parameter queries
+    * selectorTerminator: (')') The character used marking the end of parameter queries
+    * Example: `document.body.map(model, {attributePrefix: 'map-'})`
+  * Breaking changes to ObjectQuery
+    * Renamed to MemberQuery
+    * Now creates a compiled selector that can be re-evaluated (vs single evaluation)
+  * Breaking change to HTMLTemplateElement.prototype.template
+    * Reading the template in js now returns the data rather than a content clone.
 * 1.0.1
   * Improved naming
     * HTMLElement.prototype.classes -> Element.prototype.class

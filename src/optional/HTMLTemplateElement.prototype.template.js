@@ -26,25 +26,27 @@
  *  </div>
  */
 (() => {
-  const Cleanup = Symbol(' _template cleanup_ ');
+  const Cleanup = Symbol(' _template cleanup_ '); // caching elements belonging to the template
+  const Data = Symbol(' _template model_ '); // caching the data model assigned to the template
   Object.defineProperty(HTMLTemplateElement.prototype, 'template', {
     configurable: false, enumerable: false,
-    get: function() { return this.content.cloneNode(true); },
+    get: function() { return this[Data]; },
     set: function(value) {
-      var element = this;
-      if (Cleanup in element) { element[Cleanup](); }
-      if (!element.parentNode) { return; }
+      this[Data] = value; // cache
+      if (Cleanup in this) { this[Cleanup](); } // cleanup previous content
+      if (!this.parentNode) { return; } // No place to add content
+      var configuration = (Node.Scope.continue(this)||{}).overrides; // Persist configuration to new scopes
       var content = (Array.isArray(value) ? value : [value])
-        .filter(v => v != null)
-        .map(model => element.template.map(model))
-        .flatMap(fragment => Array.from(fragment.childNodes));
-      element[Cleanup] = () => {
+        .filter(v => v != null) // don't create elements for these
+        .map(model => this.content.cloneNode(true).map(model, configuration)) // create view
+        .flatMap(fragment => Array.from(fragment.childNodes)); // extract elements
+      this[Cleanup] = () => { // Configure cleanup
         content.forEach(e => e.parentNode && e.parentNode.removeChild(e));
-        delete element[Cleanup];
+        delete this[Cleanup];
       };
-      element.parentNode.insertBefore(
+      this.parentNode.insertBefore( // Insert view content
         content.reduce((frag,node) => frag.appendChild(node)&&frag, document.createDocumentFragment()),
-        element.nextSibling
+        this.nextSibling
       )
     }
   });

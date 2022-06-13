@@ -22,13 +22,11 @@ test('map a template to an array', () => {
   expect(spans[2].textContent).toBe('c');
 });
 
-test('returns clone of content', () => {
+test('returns data', () => {
+  var data = {};
   var template = document.createElement('template');
-  template.innerHTML = '<div></div>';
-  var clone = template.template;
-  expect(clone === template.content).toBe(false);
-  expect(clone.childNodes.length).toBe(1);
-  expect(clone.childNodes[0].tagName).toBe('DIV');
+  template.template = data;
+  expect(template.template).toBe(data);
 });
 
 test('cleans up on remap', () => {
