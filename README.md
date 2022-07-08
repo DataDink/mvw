@@ -24,7 +24,7 @@ declarative, attribute-driven mapping/binding between elements and models.
 **Cons:**
 * Performance: Enough for lightweight projects
 * Scalability: Beyond the scope of this project
-* Support: Unlikely, this was an experiment.
+* Support: Maybe, this was an experiment
 
 **Problem Being Solved:**
 
@@ -219,6 +219,18 @@ document.body.map(model);
 ```
 
 # Version Notes
+* 1.2
+  * Cleanup items
+    * Consolidated parsing functions to String.scanUntil & String.scanWhile
+    * Consolidated common configuration functionality to Object.override
+    * Renamed folder structure to match builds
+    * Updated build to support multiple builds: core, standard, extras
+    * Updated code to work better with minification
+    * Switched over to JSDoc style commenting
+  * Serialization
+    * Added JSON-esque serialization at Object.serialize & Object.deserialize
+    * Supports type/class resolution
+    * Supports instance referencing
 * 1.1
   * Preformance Pass
     * Increased performance at the expense of a bump to caching on elements

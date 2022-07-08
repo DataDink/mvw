@@ -29,7 +29,7 @@ function build(name, directories) {
   const contents = files
     .map(file => fs.readFileSync(file))
     .map(content => content.toString().replace(/^\s+|\s+$/g, ''))
-    .join('\n\n');
+    .join(';\n\n');
   !fs.existsSync('dst') && fs.mkdirSync('dst');
   minify(contents, {
     mangle: false,
@@ -43,6 +43,7 @@ function build(name, directories) {
     `${header}${out.code}${footer}`
   ));
   minify(contents, {
+    mangle: {eval: true},
     keep_classnames: true
   }).then(out => fs.writeFileSync(
     `./dst/mvw.${name}.minified.js`,

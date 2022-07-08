@@ -100,16 +100,6 @@ test('config pathTerminators is properly formed', () => {
   ).toBe('123')
 });
 
-test('config paramTerminators is properly formed', () => {
-  expect(
-    (new MemberQuery.Config({
-      parameterDelimiter: '1',
-      selectorTerminator: '2',
-      trimCharacters: '3',
-    })).paramTerms
-  ).toBe('123');
-});
-
 test('can configure memberDelimiter', () => {
   expect(
     (new MemberQuery('member1-member2', new MemberQuery.Config({

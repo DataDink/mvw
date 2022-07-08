@@ -15,4 +15,4 @@ function override(target, source) {
     }
   }
   return target;
-}
+};
