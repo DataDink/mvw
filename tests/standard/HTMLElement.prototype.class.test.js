@@ -1,4 +1,4 @@
-require('../../dst/mvw.js');
+require('../../dst/mvw.standard.js');
 
 test('map a class to a boolean', () => {
   var model = {value: true};

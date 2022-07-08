@@ -1,4 +1,4 @@
-require('../../dst/mvw.js');
+require('../../dst/mvw.standard.js');
 
 test('map a template to a model', () => {
   var view = document.createElement('div');

@@ -1,4 +1,4 @@
-require('../../dst/mvw.js');
+require('../../dst/mvw.core.js');
 
 test('select a value', () => {
   expect(
@@ -94,9 +94,10 @@ test('config pathTerminators is properly formed', () => {
   expect(
     (new MemberQuery.Config({
       selectorDelimiter: '1',
-      trimCharacters: '2'
-    })).pathTerminators
-  ).toBe('12')
+      trimCharacters: '2',
+      selectorTerminator: '3'
+    })).pathTerms
+  ).toBe('123')
 });
 
 test('config paramTerminators is properly formed', () => {
@@ -105,7 +106,7 @@ test('config paramTerminators is properly formed', () => {
       parameterDelimiter: '1',
       selectorTerminator: '2',
       trimCharacters: '3',
-    })).paramTerminators
+    })).paramTerms
   ).toBe('123');
 });
 

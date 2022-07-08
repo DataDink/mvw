@@ -1,4 +1,4 @@
-require('../../dst/mvw.js');
+require('../../dst/mvw.core.js');
 
 test('map textContent to model.value', () => {
   var element = document.createElement('div');

@@ -1,33 +1,9 @@
-/*
- *  HTMLTemplateElement.prototype.template:
- *  Exposes a binding/mapping member on HTMLTemplateElements
- *  that will render objects & arrays of objects to the DOM
- *  immediately after itself
- *
- *  Usage:
- *  <template data-template="model.array.value"></template>
- *
- *  Example:
- *  var parent = document.createElement('div');
- *  var template = parent.appendChild(document.createElement('template'));
- *  template.innerHTML = '<span data-textContent="value"></span>';
- *  template.template = [
- *    {value: 'a'},
- *    {value: 'b'},
- *    {value: 'c'}
- *  ];
- *
- *  Result:
- *  <div>
- *    <template><span data-textContent="value"></span></template>
- *    <span data-textContent="value">a</span>
- *    <span data-textContent="value">b</span>
- *    <span data-textContent="value">c</span>
- *  </div>
- */
 (() => {
-  const Cleanup = Symbol(' _template cleanup_ '); // caching elements belonging to the template
-  const Data = Symbol(' _template model_ '); // caching the data model assigned to the template
+  /** @constant {Symbol} Cleanup - caching index for elements belonging to the template */
+  const Cleanup = Symbol(' _template cleanup_ ');
+  /** @constant {Symbol} Data - caching index for the data model assigned to the template */
+  const Data = Symbol(' _template model_ ');
+  /** @member {object} template - Extends HTMLTemplateElement with the template property */
   Object.defineProperty(HTMLTemplateElement.prototype, 'template', {
     configurable: false, enumerable: false,
     get: function() { return this[Data]; },
