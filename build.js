@@ -36,15 +36,16 @@ function build(name, directories) {
     compress: false,
     format: {
       beautify: true
-    },
-    keep_classnames: true
+    }
   }).then(out => fs.writeFileSync(
     `./dst/mvw.${name}.js`,
     `${header}${out.code}${footer}`
   ));
   minify(contents, {
-    mangle: {eval: true},
-    keep_classnames: true
+    mangle: {
+      eval: true,
+      keep_classnames: true
+    }
   }).then(out => fs.writeFileSync(
     `./dst/mvw.${name}.minified.js`,
     `${header}${out.code}${footer}`
