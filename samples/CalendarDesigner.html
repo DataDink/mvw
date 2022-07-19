@@ -381,7 +381,7 @@
     </script>
     <script id="js-application">
       class Application {
-        #view; // The Node the application is bound to
+        #view; // The Node the application is bound to NOTE: Doing this tangles view/model concerns
         events; // An array of Event
         background; // A url to a remote image or a data url
         footer; // Some text (e.g. restaurant name) at the bottom of the page

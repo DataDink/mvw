@@ -248,7 +248,7 @@
     </script>
     <script id="js-application">
       class Application {
-        #view; // The bound DOM Node
+        #view; // The bound DOM Node NOTE: Doing this tangles view/model concerns
         #data = new Cache('foodbook'); // Session persistence
 
         get times() { // suggested times
