@@ -68,7 +68,7 @@ console.log("https://github.com/DataDink/mvw v1.2.0");
 })();
 
 Node.Scope = class Scope {
-    static #Index=Symbol(" _mapdata_ ");
+    static #Index=Symbol("mapping-scope");
     attributePrefix="data-";
     attributeDelimiter="-";
     constructor(overrides = {}) {
@@ -82,13 +82,12 @@ Node.Scope = class Scope {
         return node[Scope.#Index] = new Scope(overrides);
     }
     static continue(node, overrides = null) {
-        window.test = 10;
         return node[Scope.#Index] || (node[Scope.#Index] = node.parentNode && node.parentNode[Scope.#Index]);
     }
 };
 
 (() => {
-    const QueryCacheIndex = Symbol(" _querycache_ ");
+    const CacheIndex = Symbol("cached-queries");
     let Lib = Node.prototype.map = function map(model, config = null) {
         var scope = Node.Scope.continue(this) || Node.Scope.create(this, config);
         return Lib.mapNode(this, model, scope);
@@ -97,14 +96,22 @@ Node.Scope = class Scope {
         if (scope !== Node.Scope.continue(node)) {
             return node;
         }
-        var cache = node[QueryCacheIndex] || (node[QueryCacheIndex] = {});
+        var cache = node[CacheIndex] || (node[CacheIndex] = []);
         Array.from(node.attributes || []).forEach((attribute => {
             if (attribute.name.indexOf(scope.attributePrefix) !== 0) {
                 return;
             }
-            var viewQuery = cache[attribute.name.toLowerCase()] || (cache[attribute.name.toLowerCase()] = new MemberQuery(Lib.repath(node, attribute.name, scope), scope.queryConfig));
-            var modelQuery = cache[attribute.value] || (cache[attribute.value] = new MemberQuery(attribute.value, scope.queryConfig));
-            viewQuery.set(node, modelQuery.get(model));
+            var name = attribute.name.toLowerCase().trim();
+            var viewQuery = cache[name] || (cache[name] = new MemberQuery(Lib.repath(node, name, scope), scope.queryConfig));
+            var selector = attribute.value.trim();
+            var modelQuery = cache[selector] || (cache[selector] = new MemberQuery(selector, scope.queryConfig));
+            var oldValue = viewQuery.get(node);
+            var newValue = modelQuery.get(model);
+            var requiresUpdate = typeof newValue === "object" || oldValue !== newValue;
+            if (!requiresUpdate) {
+                return;
+            }
+            viewQuery.set(node, newValue);
         }));
         Array.from(node.childNodes).forEach((child => Lib.mapNode(child, model, scope)));
         return node;
@@ -186,8 +193,8 @@ Object.defineProperty(Element.prototype, "class", {
 });
 
 (() => {
-    const Cleanup = Symbol(" _template cleanup_ ");
-    const Data = Symbol(" _template model_ ");
+    const Content = Symbol("template-content");
+    const Data = Symbol("template-data");
     Object.defineProperty(HTMLTemplateElement.prototype, "template", {
         configurable: false,
         enumerable: false,
@@ -196,19 +203,25 @@ Object.defineProperty(Element.prototype, "class", {
         },
         set: function(value) {
             this[Data] = value;
-            if (Cleanup in this) {
-                this[Cleanup]();
-            }
-            if (!this.parentNode) {
+            var content = this[Content] ?? (this[Content] = []);
+            if (value == null || !this.parentNode) {
+                content.forEach((c => c.forEach((e => e.parentNode && e.parentNode.removeChild(e)))));
                 return;
             }
             var configuration = (Node.Scope.continue(this) || {}).overrides;
-            var content = (Array.isArray(value) ? value : [ value ]).filter((v => v != null)).map((model => this.content.cloneNode(true).map(model, configuration))).flatMap((fragment => Array.from(fragment.childNodes)));
-            this[Cleanup] = () => {
-                content.forEach((e => e.parentNode && e.parentNode.removeChild(e)));
-                delete this[Cleanup];
-            };
-            this.parentNode.insertBefore(content.reduce(((frag, node) => frag.appendChild(node) && frag), document.createDocumentFragment()), this.nextSibling);
+            var bindings = (typeof value === "object" && Symbol.iterator in value ? Array.from(value) : [ value ]).filter((v => v != null));
+            for (var i = 0; i < bindings.length && i < content.length; i++) {
+                content[i].forEach((element => element.map(bindings[i])));
+            }
+            while (content.length > bindings.length) {
+                content.pop().forEach((element => element.parentNode && element.parentNode.removeChild(element)));
+            }
+            for (var i = content.length; i < bindings.length; i++) {
+                var insert = (i > 0 ? content[i - 1][0] ?? this : this).nextSibling;
+                var elements = Array.from(this.content.cloneNode(true).map(bindings[i], configuration).childNodes);
+                content.push(elements);
+                elements.forEach((element => this.parentNode.insertBefore(element, insert)));
+            }
         }
     });
 })();

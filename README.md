@@ -31,7 +31,7 @@ declarative, attribute-driven mapping/binding between elements and models.
 *The only real missing piece to the DOM is a good method for declaratively binding it to a model*
 <img src="Problem.jpg" style="width: 50%;" />
 
-*This came out similar to vue, but prefers web standards over custom and leverages js extensions vs custom libs*
+*This came out unintentionally similar to vue, but differs in that it tries to keep/continue with existing web patterns and leverages prototype extensions*
 
 # Examples
 ## Basics
