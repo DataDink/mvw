@@ -1,9 +1,9 @@
 (() => {
   /**
   * The index for caching to the node
-  * @constant {Symbol} QueryCacheIndex
+  * @constant {Symbol} CacheIndex
   */
-  const QueryCacheIndex = Symbol(' _querycache_ '); // Index for caching queries to Nodes
+  const CacheIndex = Symbol('cached-queries'); // Index for caching queries to Nodes
   let Lib = // For minification
   /**
   *  Extends Node with a method that maps values from a model to a node
@@ -13,7 +13,7 @@
   * @param {object} config - The settings for this mapping
   * @returns {Node} - The mapped node
   */
-  Node.prototype.map = // For global
+  Node.prototype.map = // Global extension
   function map(model, config = null) { // Init scope and pass to recursive func
     var scope = Node.Scope.continue(this) || Node.Scope.create(this, config);
     return Lib.mapNode(this, model, scope);
@@ -28,23 +28,23 @@
   */
   Lib.mapNode = function(node, model, scope) {
     if (scope !== Node.Scope.continue(node)) { return node; } // Reached another mapping scope
-    var cache = node[QueryCacheIndex] || (node[QueryCacheIndex] = {}); // Query cache
+    var cache = node[CacheIndex] || (node[CacheIndex] = []); // Query cache
     Array.from(node.attributes || [])
       .forEach(attribute => {
         if (attribute.name.indexOf(scope.attributePrefix) !== 0) { return; }
-        var viewQuery = cache[attribute.name.toLowerCase()] || (cache[attribute.name.toLowerCase()] = // Get or create the attribute query
-          new MemberQuery(
-            Lib.repath(node, attribute.name, scope),
-            scope.queryConfig
-          )
+        var name = attribute.name.toLowerCase().trim();
+        var viewQuery = cache[name] || (cache[name] = // Get or create the attribute query
+          new MemberQuery(Lib.repath(node, name, scope), scope.queryConfig)
         );
-        var modelQuery = cache[attribute.value] || (cache[attribute.value] = // Get or create the model query
-          new MemberQuery(
-            attribute.value,
-            scope.queryConfig
-          )
+        var selector = attribute.value.trim();
+        var modelQuery = cache[selector] || (cache[selector] = // Get or create the model query
+          new MemberQuery(selector, scope.queryConfig)
         );
-        viewQuery.set(node, modelQuery.get(model)); // Apply the mapping
+        var oldValue = viewQuery.get(node);
+        var newValue = modelQuery.get(model);
+        var requiresUpdate = typeof(newValue) === 'object' || oldValue !== newValue;
+        if (!requiresUpdate) { return; }
+        viewQuery.set(node, newValue);
       });
     Array.from(node.childNodes)
          .forEach(child => Lib.mapNode(child, model, scope));

@@ -1,4 +1,4 @@
-Node.Scope = // global
+Node.Scope = // global extension
 /**
 * Configures the mapping scope for a node and its descendants.
 * @class {Scope}
@@ -6,7 +6,7 @@ Node.Scope = // global
 */
 class Scope {
   /** @constant {Symbol} Index - Mapping cache node index */
-  static #Index = Symbol(' _mapdata_ ');
+  static #Index = Symbol('mapping-scope');
   /** @member {string} attributePrefix - The prefix used to identify mapping attributes */
   attributePrefix = 'data-';
   /** @member {string} attributeDelimiter - The character that delineats members in an attribute name */
@@ -36,7 +36,6 @@ class Scope {
   * @returns {Node.Scope} The scope configured to the node (new when no parent scope)
   */
   static continue(node, overrides = null) { // Retrieves the node's or inherits the parentNode's scope
-    window.test = 10;
     return node[Scope.#Index] || (
       node[Scope.#Index] = (node.parentNode && node.parentNode[Scope.#Index])
     );

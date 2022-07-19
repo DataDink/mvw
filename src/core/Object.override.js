@@ -5,7 +5,7 @@
 * @param {object} source - The object being copied from
 * @returns {object} The target object
 */
-Object.override = // global
+Object.override = // global extension
 function override(target, source) {
   if (source && target) {
     for (var member in target) {

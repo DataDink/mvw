@@ -31,6 +31,8 @@ declarative, attribute-driven mapping/binding between elements and models.
 *The only real missing piece to the DOM is a good method for declaratively binding it to a model*
 <img src="Problem.jpg" style="width: 50%;" />
 
+*This came out similar to vue, but prefers web standards over custom and leverages js extensions vs custom libs*
+
 # Examples
 ## Basics
 *Maps `model.value` to the span's `textContent` property*
@@ -220,6 +222,9 @@ document.body.map(model);
 
 # Version Notes
 * 1.2
+  * Performance
+    * Optimizations to HTMLTemplateElement.prototype.template extension
+    * Optimizations to Node.prototype.map
   * Cleanup items
     * Consolidated parsing functions to String.scanUntil & String.scanWhile
     * Consolidated common configuration functionality to Object.override

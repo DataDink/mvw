@@ -35,6 +35,28 @@ test('cleans up on remap', () => {
   template.innerHTML = '<span></span>';
   template.template = [{}, {}, {}];
   expect(container.childNodes.length).toBe(4);
+  template.template = [{}];
+  expect(container.childNodes.length).toBe(2);
   template.template = [];
   expect(container.childNodes.length).toBe(1);
+});
+
+test('recycles elements', () => {
+  var container = document.createElement('div');
+  var template = container.appendChild(document.createElement('template'));
+  template.innerHTML = '<span></span>';
+  template.template = [{}, {}];
+  var a = container.childNodes[1];
+  var b = container.childNodes[2];
+  template.template = [{}, {}];
+  expect(a === container.childNodes[1]).toBe(true);
+  expect(b === container.childNodes[2]).toBe(true);
+  template.template = [];
+  template.template = [{}, {}];
+  expect(a === container.childNodes[1]).toBe(false);
+  expect(b === container.childNodes[2]).toBe(false);
+});
+
+test('template keeps same scope', () => {
+
 });

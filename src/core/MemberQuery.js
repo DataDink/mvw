@@ -1,6 +1,6 @@
 (() => {
   let Lib = // For minification
-  (function() { return this; })().MemberQuery = // global
+  (function() { return this; })().MemberQuery = // add to global namespace
   /**
   *  Compiles a query that can be executed on an object
   *  to get or set a descendant member value.
