@@ -236,6 +236,11 @@ document.body.map(model);
     * Added JSON-esque serialization at Object.serialize & Object.deserialize
     * Supports type/class resolution
     * Supports instance referencing
+  * Extensions
+    * Added JSON-esque serialization at Object.serialize & Object.deserialize
+      * Supports type/class resolution
+      * Supports instance referencing
+    * HTMLElement.prototype.shown to compliment HTMLElement.protottype.hidden
 * 1.1
   * Preformance Pass
     * Increased performance at the expense of a bump to caching on elements

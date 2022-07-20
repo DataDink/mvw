@@ -192,6 +192,17 @@ Object.defineProperty(Element.prototype, "class", {
     }
 });
 
+Object.defineProperty(HTMLElement.prototype, "shown", {
+    configurable: false,
+    enumerable: true,
+    get: function() {
+        return !this.hidden;
+    },
+    set: function(value) {
+        this.hidden = !value;
+    }
+});
+
 (() => {
     const Content = Symbol("template-content");
     const Data = Symbol("template-data");
