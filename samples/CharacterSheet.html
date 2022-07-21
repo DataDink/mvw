@@ -1,7 +1,5 @@
 <html>
   <head>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Pathway+Gothic+One&family=Pirata+One&display=swap" rel="stylesheet">
     <style id="theme">
       :root {
@@ -12,7 +10,15 @@
         --accent-rgb: 255,128,0;
         --accent: rgb(var(--accent-rgb));
         --stroke: .015em;
+        --info-rgb: 180,180,200;
+        --info: rgb(var(--info-rgb));
+        --warn-rgb: 255,200,0;
+        --warn: rgb(var(--warn-rgb));
+        --alert-rgb: 255,40,0;
+        --alert: rgb(var(--alert-rgb));
       }
+      @keyframes fadein {from {opacity: 0;} to {opacity: 1;}}
+      body { animation: .25s fadein; }
       header,h1,h2,h3,h4,h5,h6 {
         background: var(--dark);
         color: var(--light);
@@ -40,6 +46,21 @@
       }
       button:active, .button:active, input[type=button]:active, input[type=submit]:active {
         transform: scale(.95);
+      }
+      .info {
+        background: linear-gradient(180deg, var(--light) -25%, var(--info) 45%, var(--info) 55%, var(--dark) 150%) !important;
+      }
+      .warn {
+        background: linear-gradient(180deg, var(--light) -25%, var(--warn) 45%, var(--warn) 55%, var(--dark) 150%) !important;
+      }
+      .alert {
+        background: linear-gradient(180deg, var(--light) -25%, var(--alert) 45%, var(--alert) 55%, var(--dark) 150%) !important;
+      }
+      input[bind-autosize], input[bind-autosize]:active {
+        background: rgba(var(--dark-rgb),.05);
+        color: var(--accent);
+        outline: none;
+        font: inherit;
       }
     </style>
     <style id="layout">
@@ -87,7 +108,15 @@
         position: fixed;
         left: 0; right: 0;
         top: 25%; bottom: auto;
-        margin: auto; width: 50em;
+        margin: auto; width: 40em;
+      }
+      dialog > p {
+        padding: 1em 2em;
+        white-space: pre;
+      }
+      dialog > footer {
+        padding: .5em 1em;
+        text-align: right;
       }
       .backdrop {
         position: fixed;
@@ -98,6 +127,14 @@
         vertical-align: middle;
         margin: auto .25em auto 0;
         padding: .2em .4em;
+      }
+      input[bind-autosize] {
+        border: none;
+        padding: 0 .5em;
+      }
+      menu > li {
+        display: flex;
+        padding: .5em 0;
       }
     </style>
     <style id="content">
@@ -122,14 +159,14 @@
           <h1>Your Templates</h1>
         </header>
         <menu>
-          <input type="checkbox" bind-onclick="toggle" />
-          <button type="button" bind-onclick="delete" bind-attribute-disabled="disableDelete">Delete</button>
           <button type="button" bind-onclick="create">New</button>
         </menu>
         <menu>
           <template bind-template="templates">
             <li>
-              <input type="text" bind-value="name" bind-onchange="rename(value)" />
+              <button type="button" bind-onclick="remove" class="alert">X</button>
+              <button type="button" bind-onclick="view" class="info">O</button>
+              <input type="text" bind-value="name" bind-onchange="rename(value)" bind-autosize/>
             </li>
           </template>
         </menu>
@@ -137,7 +174,7 @@
     </main>
     <template bind-template="views.dialog">
       <dialog bind-open>
-        <header bind-textContent="title"></header>
+        <header><h4 bind-textContent="title"></h4></header>
         <p bind-textContent="message"></p>
         <footer>
           <template bind-template="responses">
@@ -146,7 +183,6 @@
         </footer>
       </dialog>
     </template>
-    <script>debugger</script>
     <script id="mvw" src="../dst/mvw.extras.js"></script>
     <script id="extensions">
       Object.defineProperty(HTMLDialogElement.prototype, 'open', {
@@ -154,13 +190,6 @@
         get: function() { return this.hasAttribute('open'); },
         set: function() { setTimeout(() => this.showModal()); }
       });
-      Object.defineProperty(HTMLInputElement.prototype, 'autosize', {
-        enumerable: true, configurable: false,
-        get: function() { return this.hasAttribute('autosize'); },
-        set: function(value) {
-          this.attribute.autosize = true;
-        }
-      })
     </script>
     <script id="application">
       class Application {
@@ -182,6 +211,7 @@
               templates: []
             }), {
               parseType: (value) => {
+                if (value === 'Object') { return {}; }
                 if (!/^[0-9a-z@$#\.]+$/i.test(value)) { return {}; }
                 try { return new (eval(value))(this); }
                 catch { return {}; }
@@ -247,28 +277,9 @@
         constructor(application) {
           this.#application = application;
         }
-        toggle() {
-          var selected = this.templates.filter(t => t.selected);
-          var newState = selected.length >= this.templates.length;
-          this.templates.forEach(t => t.selected = true);
-          this.#application.save();
-        }
         create() {
           this.templates.push(new Template(this.#application));
           this.#application.save();
-        }
-        delete() {
-          this.#application.showDialog(new Dialog({
-            title: 'Delete Template(s)',
-            message: "This can't be undone. Are you sure?",
-            buttons: ['delete', 'cancel']
-          }))
-          .then(selection => {
-            if (selection !== 'delete') { return; }
-            var selected = this.templates.filter(t => t.selected);
-            selected.forEach(t => this.templates.splice(this.templates.indexOf(t), 1));
-            this.#application.save();
-          });
         }
       }
 
@@ -284,6 +295,20 @@
         rename(name) {
           this.name = name;
           this.#application.save();
+        }
+        remove() {
+          this.#application.showDialog(new Dialog({
+            title: 'Delete Template',
+            message: "This can't be undone.\nAre you sure?",
+            buttons: ['Cancel', 'Delete']
+          }))
+          .then(result => {
+            if (result === 'Cancel') { return; }
+            var index = this.#application.model.templates.indexOf(this);
+            if (index === -1) { return; }
+            this.#application.model.templates.splice(index, 1);
+            this.#application.save();
+          });
         }
       }
 
