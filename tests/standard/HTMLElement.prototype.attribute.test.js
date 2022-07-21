@@ -32,17 +32,13 @@ test('supports in', () => {
   expect('no' in element.attribute).toBe(false);
 });
 
-test('removes when undefined, null, false', () => {
+test('false removes, undefined/null adds', () => {
   var element = document.createElement('div');
-  element.setAttribute('undefined', 'undefined');
-  element.setAttribute('null', 'null');
   element.setAttribute('false', 'false');
   element.attribute.undefined = undefined;
-  expect(element.hasAttribute('undefined')).toBe(false);
-  expect(element.hasAttribute('null')).toBe(true);
-  expect(element.hasAttribute('false')).toBe(true);
+  expect(element.hasAttribute('undefined')).toBe(true);
   element.attribute.null = null;
-  expect(element.hasAttribute('null')).toBe(false);
+  expect(element.hasAttribute('null')).toBe(true);
   element.attribute.false = false;
   expect(element.hasAttribute('false')).toBe(false);
 });
@@ -58,7 +54,7 @@ test('adds when falsy', () => {
 test('adds name when true', () => {
   var element = document.createElement('div');
   element.attribute.test = true;
-  expect(element.getAttribute('test')).toBe('test');
+  expect(element.hasAttribute('test')).toBe(true);
 });
 
 test('adds value when string', () => {

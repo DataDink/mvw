@@ -10,14 +10,10 @@
     set: function(value) {
       this[Data] = value; // for the getter
       var content = this[Content] ?? (this[Content]=[]);
-      if (value == null || !this.parentNode) {
-        content.forEach(c => c.forEach(e => e.parentNode && e.parentNode.removeChild(e)));
-        return;
-      }
       var configuration = (Node.Scope.continue(this)||{}).overrides;
-      var bindings = (typeof(value) === 'object' && Symbol.iterator in value
-        ? Array.from(value)
-        : [value]).filter(v => v != null);
+      var bindings = value == null ? []
+        : typeof(value) === 'object' && Symbol.iterator in value ? Array.from(value)
+        : [value];
       for (var i = 0; i < bindings.length && i < content.length; i++) { // remap existing
         content[i].forEach(element => element.map(bindings[i]));
       }
