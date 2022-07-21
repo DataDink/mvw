@@ -77,14 +77,14 @@
     * @param {Object} v - The instance value
     * @returns {String} - A formatted value
     */
-    formatType(v) { return v.constructor.name; }
+    formatType = function formatType(v) { return v.constructor.name; }
     /**
     * The strategy for serializing a function value
     * @function formatFunction
     * @param {Function} f - The function to be serialized
     * @returns {String} - A formatted value
     */
-    formatFunction(f) { return `function ${f.name}() {}`; }
+    formatFunction = function formatFunction(f) { return `function ${f.name}() {}`; }
     constructor(overrides) {
       Object.override(this, overrides);
       this.catalog = [];

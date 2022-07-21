@@ -327,7 +327,7 @@ Object.defineProperty(HTMLElement.prototype, "shown", {
         refKey="*";
         typeKey=":";
         whitespace=" \t\r\n";
-        parseType(value) {
+        parseType=function parseType(value) {
             if (!/^[0-9a-z@$#\.]+$/i.test(value)) {
                 return {};
             }
@@ -336,7 +336,7 @@ Object.defineProperty(HTMLElement.prototype, "shown", {
             } catch {
                 return {};
             }
-        }
+        };
         constructor(source, overrides = null) {
             Object.override(this, overrides);
             this.source = source;
@@ -392,12 +392,12 @@ Object.defineProperty(HTMLElement.prototype, "shown", {
     Lib.Config = class Config {
         refKey="*";
         typeKey=":";
-        formatType(v) {
+        formatType=function formatType(v) {
             return v.constructor.name;
-        }
-        formatFunction(f) {
+        };
+        formatFunction=function formatFunction(f) {
             return `function ${f.name}() {}`;
-        }
+        };
         constructor(overrides) {
             Object.override(this, overrides);
             this.catalog = [];

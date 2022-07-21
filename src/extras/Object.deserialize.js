@@ -124,7 +124,7 @@
     * @function parseType
     * @param {String} value - The value to be parsed.
     */
-    parseType(value) {
+    parseType = function parseType(value) {
       if (!/^[0-9a-z@$#\.]+$/i.test(value)) { return {}; }
       try { return new (eval(value))(); }
       catch { return {}; }
