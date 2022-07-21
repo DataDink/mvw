@@ -164,33 +164,37 @@ Object.override = function override(target, source) {
     }
 })();
 
-Object.defineProperty(Element.prototype, "attribute", {
-    configurable: false,
-    enumerable: true,
-    get: function() {
-        var element = this;
-        return new Proxy({}, {
-            has: (_, name) => element.hasAttribute(name),
-            get: (_, name) => element.hasAttribute(name) ? element.getAttribute(name) : false,
-            set: (_, name, value) => value != null && value !== false ? element.setAttribute(name, value === true ? name : value) || true : element.removeAttribute(name) || true,
-            ownKeys: () => Array.from(element.attributes).map((a => a.name))
-        });
-    }
-});
+(() => {
+    let Index = Symbol("attribute");
+    Object.defineProperty(Element.prototype, "attribute", {
+        configurable: false,
+        enumerable: true,
+        get: function() {
+            return this[Index] || (this[Index] = (element => new Proxy({}, {
+                has: (_, name) => element.hasAttribute(name),
+                get: (_, name) => element.hasAttribute(name) ? element.getAttribute(name) : false,
+                set: (_, name, value) => value !== false ? element.setAttribute(name, value === true ? name : value == null ? "" : value) || true : element.removeAttribute(name) || true,
+                ownKeys: () => Array.from(element.attributes).map((a => a.name))
+            }))(this));
+        }
+    });
+})();
 
-Object.defineProperty(Element.prototype, "class", {
-    configurable: false,
-    enumerable: true,
-    get: function() {
-        var element = this;
-        return new Proxy({}, {
-            has: (_, name) => element.classList.contains(name),
-            get: (_, name) => element.classList.contains(name),
-            set: (_, name, value) => element.classList.remove(name) || !!value && element.classList.add(name) || true,
-            ownKeys: () => Array.from(element.classList)
-        });
-    }
-});
+(() => {
+    let Index = Symbol("class");
+    Object.defineProperty(Element.prototype, "class", {
+        configurable: false,
+        enumerable: true,
+        get: function() {
+            return this[Index] || (this[Index] = (element => new Proxy({}, {
+                has: (_, name) => element.classList.contains(name),
+                get: (_, name) => element.classList.contains(name),
+                set: (_, name, value) => element.classList.remove(name) || !!value && element.classList.add(name) || true,
+                ownKeys: () => Array.from(element.classList)
+            }))(this));
+        }
+    });
+})();
 
 Object.defineProperty(HTMLElement.prototype, "shown", {
     configurable: false,
@@ -233,6 +237,31 @@ Object.defineProperty(HTMLElement.prototype, "shown", {
                 content.push(elements);
                 elements.forEach((element => this.parentNode.insertBefore(element, insert)));
             }
+        }
+    });
+})();
+
+(() => {
+    let Index = Symbol("autosize");
+    function handler() {
+        this.style.width = 0;
+        this.style.width = this.scrollWidth + "px";
+    }
+    Object.defineProperty(HTMLInputElement.prototype, "autosize", {
+        configurable: false,
+        enumerable: true,
+        get: function() {
+            return this[Index] || false;
+        },
+        set: function(value) {
+            this[Index] = value !== false;
+            this.removeEventListener("input", handler);
+            if (value === false) {
+                return true;
+            }
+            this.addEventListener("input", handler);
+            setTimeout(handler.call(this));
+            return true;
         }
     });
 })();

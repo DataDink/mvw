@@ -18,13 +18,14 @@ declarative, attribute-driven mapping/binding between elements and models.
 * Clean
 * Declarative
 * Unopinionated
-* Embraces the Web
+* Customizable
+* Embraces/targets existing web practices
 * Targets light projects (no overhead, quick startup)
 
 **Cons:**
-* Performance: Enough for lightweight projects
-* Scalability: Beyond the scope of this project
-* Support: Maybe, this was an experiment
+* Performance: Untested -> Enough for lightweight projects
+* Support: Maybe, this was an experiment. Feel free to make pull requests.
+* Breaking Changes: This project is currently young and undergoing breaking changes while core functionality is being flushed out.
 
 **Problem Being Solved:**
 
@@ -222,25 +223,34 @@ document.body.map(model);
 
 # Version Notes
 * 1.2
-  * Performance
-    * Optimizations to HTMLTemplateElement.prototype.template extension
-    * Optimizations to Node.prototype.map
+  * Added
+    * mvw.core
+      * String.scanUntil & String.scanWhile
+        * Consolidated common parsing utility functions
+      * Object.override
+        * Consolidated common mapping utility function
+    * mvw.standard
+      * HTMLElement.prototype.shown
+        * Compliments HTMLElement.prototype.hidden
+    * mvw.extras
+      * Object.serialize & Object.deserialize (extras)
+        * JSON-esque
+        * type/class resolution
+        * instance referencing
+      * HTMLInputElement.prototype.autosize
+        * Enables auto resizing on a text control
+  * Optimizations
+    * HTMLTemplateElement.prototype.template
+    * Node.prototype.map
+    * Element.prototype.attribute
+    * Element.prototype.class
   * Cleanup items
-    * Consolidated parsing functions to String.scanUntil & String.scanWhile
-    * Consolidated common configuration functionality to Object.override
-    * Renamed folder structure to match builds
     * Updated build to support multiple builds: core, standard, extras
-    * Updated code to work better with minification
-    * Switched over to JSDoc style commenting
-  * Serialization
-    * Added JSON-esque serialization at Object.serialize & Object.deserialize
-    * Supports type/class resolution
-    * Supports instance referencing
-  * Extensions
-    * Added JSON-esque serialization at Object.serialize & Object.deserialize
-      * Supports type/class resolution
-      * Supports instance referencing
-    * HTMLElement.prototype.shown to compliment HTMLElement.protottype.hidden
+    * Renamed folder structure to match builds
+  * Breaking Changes
+    * Conforming Element.prototype.attribute extension to remove only on a false value
+      * Previously included null/undefined
+      * This change enables <element data-attribute /> style activation of attributes
 * 1.1
   * Preformance Pass
     * Increased performance at the expense of a bump to caching on elements
