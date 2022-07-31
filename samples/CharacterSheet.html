@@ -156,15 +156,27 @@
       </section>
       <template bind-template="views.templates">
         <header>
-          <h1>Your Templates</h1>
+          <h1 bind-shown="views.list">Your Games</h1>
+          <h1 bind-shown="views.view" bind-textContent="views.view.template.name"></h1>
+          <h1 bind-shown="views.view">Your Characters</h1>
         </header>
         <menu>
-          <button type="button" bind-onclick="create">New</button>
+          <button bind-shown="views.list" bind-onclick="create">New</button>
+          <button bind-shown="views.view" bind-onclick="views.view.create">New</button>
+          <button bind-shown="views.view" bind-onclick="views.view.list">Close</button>
         </menu>
         <menu>
-          <template bind-template="templates">
+          <template bind-template="views.list">
             <li>
-              <button type="button" bind-onclick="remove" class="alert">X</button>
+              <button type="button" bind-onclick="delete" class="alert">X</button>
+              <button type="button" bind-onclick="edit" class="info">E</button>
+              <button type="button" bind-onclick="view" class="info">O</button>
+              <input type="text" bind-value="name" bind-onchange="rename(value)" bind-autosize/>
+            </li>
+          </template>
+          <template bind-template="views.view.views.list">
+            <li>
+              <button type="button" bind-onclick="delete" class="alert">X</button>
               <button type="button" bind-onclick="view" class="info">O</button>
               <input type="text" bind-value="name" bind-onchange="rename(value)" bind-autosize/>
             </li>
@@ -197,7 +209,6 @@
         #refresh;
         views = {
           templates: null,
-          instances: null,
           dialog: null
         };
         constructor(subscription) {
@@ -224,13 +235,7 @@
           this.#refresh();
         }
         showTemplates() {
-          this.views.instances = null;
           this.views.templates = new Templates(this);
-          this.#refresh();
-        }
-        showInstances() {
-          this.views.templates = null;
-          this.views.instances = new Instances(this);
           this.#refresh();
         }
         showDialog(dialog) {
@@ -269,24 +274,42 @@
 
       class Templates {
         #application;
-        get templates() { return this.#application.model.templates; }
-        get disableDelete() {
-          return !this.templates.some(t => t.selected)
-              && !this.templates.flatMap(t => t.instances).some(i => i.selected);
+        views = {
+          list: null,
+          view: null,
+          edit: null
         }
         constructor(application) {
           this.#application = application;
+          this.list();
         }
         create() {
           this.templates.push(new Template(this.#application));
+          this.#application.save();
+        }
+        list() {
+          this.views.edit = null;
+          this.views.instances = null;
+          this.views.list = this.#application.model.templates;
+          this.#application.save();
+        }
+        edit(template) {
+          this.views.list = null;
+          this.views.instances = null;
+          this.views.edit = template;
+          this.#application.save();
+        }
+        view(template) {
+          this.views.list = null;
+          this.views.edit = null;
+          this.views.view = new Instances(this.#application, template);
           this.#application.save();
         }
       }
 
       class Template {
         #application;
-        selected = false;
-        name = 'New Template';
+        name = 'New Game';
         instances = [];
         layout = [];
         constructor(application) {
@@ -296,7 +319,10 @@
           this.name = name;
           this.#application.save();
         }
-        remove() {
+        edit() {
+          this.#application.views.templates.showEdit(this);
+        }
+        delete() {
           this.#application.showDialog(new Dialog({
             title: 'Delete Template',
             message: "This can't be undone.\nAre you sure?",
@@ -310,12 +336,41 @@
             this.#application.save();
           });
         }
+        view() {
+          this.views.templates.;
+          this.views.instances = new Instances(this.#application, this);
+          this.#application.save();
+        }
+      }
+
+      class Instances {
+        #template;
+        #application;
+        views = {
+          list: null,
+          view: null
+        };
+        get instances() { return this.#template.instances; }
+        constructor(application, template) {
+          this.#template = template;
+          this.#application = application;
+        }
+        create() {
+          var instance = new Instance(this.#application);
+          instance.template = this.#template;
+          this.#template.instances.push(new Instance)
+          this.#application.save();
+        }
       }
 
       class Instance {
-        selected = false;
+        #application;
         template = null;
-        values = {};
+        name = 'New Character';
+        values = [];
+        constructor(application) {
+          this.#application = application;
+        }
       }
     </script>
     <script id="bootstrap">
