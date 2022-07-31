@@ -2,9 +2,8 @@ const fs = require('fs');
 const path = require('path');
 const {minify} = require('terser');
 const package = JSON.parse(fs.readFileSync('./package.json').toString());
-const header = `console.log("https://github.com/DataDink/mvw v${package.version}");`
-             + '\n(() => {';
-const footer = '})();';
+const format = (name, content) => `console.log("https://github.com/DataDink/mvw ${name} v${package.version}");`
+                                + `\n(() => {\n${content}\n})();`;
 
 build('core', [
   './src/core/'
@@ -13,19 +12,18 @@ build('standard', [
   './src/core/',
   './src/standard/'
 ]);
-build('extras', [
+build('extended', [
   './src/core/',
   './src/standard/',
-  './src/extras/'
+  './src/extended/'
 ]);
 
-function build(name, directories) {
-  const files = [
-    ...directories
-      .flatMap(dir => fs.readdirSync(dir)
-        .map(n => path.join(dir, n))
-      )
-  ];
+function build(name, sources) {
+  const files = sources
+    .flatMap(source => fs.lstatSync(source).isFile()
+      ? [source]
+      : fs.readdirSync(source).map(n => path.join(source, n))
+    );
   const contents = files
     .map(file => fs.readFileSync(file))
     .map(content => content.toString().replace(/^\s+|\s+$/g, ''))
@@ -39,7 +37,7 @@ function build(name, directories) {
     }
   }).then(out => fs.writeFileSync(
     `./dst/mvw.${name}.js`,
-    `${header}${out.code}${footer}`
+    format(name, out.code)
   ));
   minify(contents, {
     mangle: {
@@ -48,6 +46,6 @@ function build(name, directories) {
     }
   }).then(out => fs.writeFileSync(
     `./dst/mvw.${name}.minified.js`,
-    `${header}${out.code}${footer}`
+    format(name, out.code)
   ));
 }

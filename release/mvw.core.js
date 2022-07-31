@@ -1,5 +1,6 @@
-console.log("https://github.com/DataDink/mvw v1.2.0");
-(() => {(() => {
+console.log("https://github.com/DataDink/mvw core v1.2.0");
+(() => {
+(() => {
     let Lib = (function() {
         return this;
     }()).MemberQuery = class MemberQuery {
@@ -162,4 +163,5 @@ Object.override = function override(target, source) {
         }
         return index >= string.length ? -1 : index;
     }
-})();})();
+})();
+})();

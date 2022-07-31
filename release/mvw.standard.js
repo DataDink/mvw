@@ -1,5 +1,6 @@
-console.log("https://github.com/DataDink/mvw v1.2.0");
-(() => {(() => {
+console.log("https://github.com/DataDink/mvw standard v1.2.0");
+(() => {
+(() => {
     let Lib = (function() {
         return this;
     }()).MemberQuery = class MemberQuery {
@@ -219,12 +220,8 @@ Object.defineProperty(HTMLElement.prototype, "shown", {
         set: function(value) {
             this[Data] = value;
             var content = this[Content] ?? (this[Content] = []);
-            if (value == null || !this.parentNode) {
-                content.forEach((c => c.forEach((e => e.parentNode && e.parentNode.removeChild(e)))));
-                return;
-            }
             var configuration = (Node.Scope.continue(this) || {}).overrides;
-            var bindings = (typeof value === "object" && Symbol.iterator in value ? Array.from(value) : [ value ]).filter((v => v != null));
+            var bindings = value == null ? [] : typeof value === "object" && Symbol.iterator in value ? Array.from(value) : [ value ];
             for (var i = 0; i < bindings.length && i < content.length; i++) {
                 content[i].forEach((element => element.map(bindings[i])));
             }
@@ -239,4 +236,5 @@ Object.defineProperty(HTMLElement.prototype, "shown", {
             }
         }
     });
-})();})();
+})();
+})();

@@ -1,4 +1,4 @@
-require('../../dst/mvw.extras.js');
+require('../../dst/mvw.extended.js');
 
 test('can get/set', () => {
   var element = document.createElement('input');
