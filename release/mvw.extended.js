@@ -1,6 +1,5 @@
 console.log("https://github.com/DataDink/mvw extended v1.2.0");
-(() => {
-(() => {
+(() => {(() => {
     let Lib = (function() {
         return this;
     }()).MemberQuery = class MemberQuery {
@@ -432,4 +431,8 @@ Object.defineProperty(HTMLElement.prototype, "shown", {
         }
     };
 })();
-})();
+
+Promise.queue = function queue(next, initialValue = null) {
+    var value = next(initialValue);
+    return value instanceof Promise ? value.then((v => Promise.queue(next, v))) : Promise.resolve(value);
+};})();

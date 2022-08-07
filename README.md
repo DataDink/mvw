@@ -232,7 +232,7 @@ document.body.map(model);
     * mvw.standard
       * HTMLElement.prototype.shown
         * Compliments HTMLElement.prototype.hidden
-    * mvw.extras
+    * mvw.extended
       * Object.serialize & Object.deserialize
         * JSON-esque
         * type/class resolution

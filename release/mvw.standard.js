@@ -1,6 +1,5 @@
 console.log("https://github.com/DataDink/mvw standard v1.2.0");
-(() => {
-(() => {
+(() => {(() => {
     let Lib = (function() {
         return this;
     }()).MemberQuery = class MemberQuery {
@@ -236,5 +235,4 @@ Object.defineProperty(HTMLElement.prototype, "shown", {
             }
         }
     });
-})();
-})();
+})();})();
