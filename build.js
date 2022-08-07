@@ -3,7 +3,7 @@ const path = require('path');
 const {minify} = require('terser');
 const package = JSON.parse(fs.readFileSync('./package.json').toString());
 const format = (name, content) => `console.log("https://github.com/DataDink/mvw ${name} v${package.version}");`
-                                + `\n(() => {\n${content}\n})();`;
+                                + `\n(() => {${content}})();`;
 
 build('core', [
   './src/core/'

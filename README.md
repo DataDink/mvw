@@ -233,12 +233,16 @@ document.body.map(model);
       * HTMLElement.prototype.shown
         * Compliments HTMLElement.prototype.hidden
     * mvw.extras
-      * Object.serialize & Object.deserialize (extras)
+      * Object.serialize & Object.deserialize
         * JSON-esque
         * type/class resolution
         * instance referencing
       * HTMLInputElement.prototype.autosize
         * Enables auto resizing on a text control
+      * Promise.queue
+        * Compliments Promise.all, Promise.race
+        * Similar to Array.prototype.reduce
+        * Redundant of using await in loops
   * Optimizations
     * HTMLTemplateElement.prototype.template
     * Node.prototype.map
