@@ -1,4 +1,4 @@
-require('../../dst/mvw.js');
+require('../../dst/mvw.core.js');
 
 test('can create instance', () => {
   expect(new Node.Scope())

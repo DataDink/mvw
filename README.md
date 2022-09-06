@@ -18,18 +18,21 @@ declarative, attribute-driven mapping/binding between elements and models.
 * Clean
 * Declarative
 * Unopinionated
-* Embraces the Web
+* Customizable
+* Embraces/targets existing web practices
 * Targets light projects (no overhead, quick startup)
 
 **Cons:**
-* Performance: Enough for lightweight projects
-* Scalability: Beyond the scope of this project
-* Support: Unlikely, this was an experiment.
+* Performance: Untested -> Enough for lightweight projects
+* Support: Maybe, this was an experiment. Feel free to make pull requests.
+* Breaking Changes: This project is currently young and undergoing breaking changes while core functionality is being flushed out.
 
 **Problem Being Solved:**
 
 *The only real missing piece to the DOM is a good method for declaratively binding it to a model*
 <img src="Problem.jpg" style="width: 50%;" />
+
+*This came out unintentionally similar to vue, but differs in that it tries to keep/continue with existing web patterns and leverages prototype extensions*
 
 # Examples
 ## Basics
@@ -219,6 +222,39 @@ document.body.map(model);
 ```
 
 # Version Notes
+* 1.2
+  * Added
+    * mvw.core
+      * String.scanUntil & String.scanWhile
+        * Consolidated common parsing utility functions
+      * Object.override
+        * Consolidated common mapping utility function
+    * mvw.standard
+      * HTMLElement.prototype.shown
+        * Compliments HTMLElement.prototype.hidden
+    * mvw.extended
+      * Object.serialize & Object.deserialize
+        * JSON-esque
+        * type/class resolution
+        * instance referencing
+      * HTMLInputElement.prototype.autosize
+        * Enables auto resizing on a text control
+      * Promise.queue
+        * Compliments Promise.all, Promise.race
+        * Similar to Array.prototype.reduce
+        * Redundant of using await in loops
+  * Optimizations
+    * HTMLTemplateElement.prototype.template
+    * Node.prototype.map
+    * Element.prototype.attribute
+    * Element.prototype.class
+  * Cleanup items
+    * Updated build to support multiple builds: core, standard, extras
+    * Renamed folder structure to match builds
+  * Breaking Changes
+    * Conforming Element.prototype.attribute extension to remove only on a false value
+      * Previously included null/undefined
+      * This change enables <element data-attribute /> style activation of attributes
 * 1.1
   * Preformance Pass
     * Increased performance at the expense of a bump to caching on elements

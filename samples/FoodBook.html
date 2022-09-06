@@ -1,5 +1,6 @@
 <html>
   <head>
+    <script src="../release/mvw.standard.js"></script>
     <style id="css-fonts">
     </style>
     <style id="css-layout">
@@ -199,12 +200,6 @@
         <option data-attribute-value="text" />
       </template>
     </datalist>
-    <script id="js-mvw">
-      console.log("https://github.com/DataDink/mvw v1.1.0");
-      (() => {
-      (function(){return this}()).MemberQuery=class e{#e;#t=[];#r=[];#i="";constructor(t,r=e.Config.Default){this.#e=r;var i=e.trim(t,0,r.trimCharacters),a=e.until(t,i,r.pathTerminators);for(this.#t=t.substring(i,a).split(r.memberDelimiter),this.#i=this.#t.pop(),a=e.trim(t,a,r.trimCharacters);a<t.length&&t[a++]!==r.selectorTerminator;)i=e.trim(t,a,r.trimCharacters),a=e.until(t,i,r.paramTerminators),this.#r.push(t.substring(i,a).split(r.memberDelimiter)),a=e.trim(t,a,r.trimCharacters)}get(t){if(null!=(t=e.walk(t,this.#t))){var r,i=t[this.#i];return"function"!=typeof i?i:this.#r.length?(r=this.#r,function(){return i.apply(t,r.map((t=>e.walk(this,t))))}):i.bind(t)}}set(t,r){null!=(t=e.walk(t,this.#t))&&(t[this.#i]=r)}static walk(e,t){for(var r=0;null!=e&&r<t.length;r++)e=e[t[r]];return e}static trim(e,t,r){for(;t<e.length&&r.indexOf(e[t])>=0;)t++;return t}static until(e,t,r){for(;++t<e.length&&r.indexOf(e[t])<0;);return t}static Config=class{memberDelimiter=".";selectorDelimiter="(";parameterDelimiter=",";selectorTerminator=")";trimCharacters=" \t\r\n";constructor(e={}){e=Object.assign({},e||{}),Object.keys(this).forEach((t=>{t in e&&(this[t]=e[t])})),this.pathTerminators=this.selectorDelimiter+this.trimCharacters,this.paramTerminators=this.parameterDelimiter+this.selectorTerminator+this.trimCharacters,Object.freeze(this)}static#a;static get Default(){return e.Config.#a||(e.Config.#a=new e.Config)}}},Node.Scope=class{attributePrefix="data-";attributeDelimiter="-";constructor(e={}){e=Object.assign({},e||{}),Object.keys(this).forEach((t=>{t in e&&(this[t]=e[t])})),this.overrides=e,this.queryConfig=new MemberQuery.Config(e),Object.freeze(this),Object.freeze(e)}static#o=Symbol(" _mapdata_ ");static create(e,t=null){return e[Node.Scope.#o]=new Node.Scope(t)}static continue(e,t=null){return e[Node.Scope.#o]||(e[Node.Scope.#o]=e.parentNode&&e.parentNode[Node.Scope.#o])}},(()=>{const e=Symbol(" _querycache_ ");Node.prototype.map=function(e,t=null){var r=Node.Scope.continue(this)||Node.Scope.create(this,t);return Node.prototype.map.mapNode(this,e,r)},Node.prototype.map.mapNode=function(t,r,i){if(i!==Node.Scope.continue(t))return t;var a=t[e]||(t[e]={});return Array.from(t.attributes||[]).forEach((e=>{if(0===e.name.indexOf(i.attributePrefix)){var o=a[e.name.toLowerCase()]||(a[e.name.toLowerCase()]=new MemberQuery(Node.prototype.map.repath(t,e.name,i),i.queryConfig)),n=a[e.value]||(a[e.value]=new MemberQuery(e.value,i.queryConfig));o.set(t,n.get(r))}})),Array.from(t.childNodes).forEach((e=>Node.prototype.map.mapNode(e,r,i))),t},Node.prototype.map.repath=function(e,t,r){return t.substr(r.attributePrefix.length).split(r.attributeDelimiter).map((t=>{if(!(t in e))for(var r=e,i=t.toLowerCase();r;){var a=Object.keys(r).find((e=>e.toLowerCase()===i));if(null!=a){t=a;break}r=Object.getPrototypeOf(r)}return e=e[t],t})).join(r.queryConfig.memberDelimiter)}})(),Object.defineProperty(Element.prototype,"attribute",{configurable:!1,enumerable:!0,get:function(){var e=this;return new Proxy({},{has:(t,r)=>e.hasAttribute(r),get:(t,r)=>!!e.hasAttribute(r)&&e.getAttribute(r),set:(t,r,i)=>null!=i&&!1!==i?e.setAttribute(r,!0===i?r:i)||!0:e.removeAttribute(r)||!0,ownKeys:()=>Array.from(e.attributes).map((e=>e.name))})}}),Object.defineProperty(Element.prototype,"class",{configurable:!1,enumerable:!0,get:function(){var e=this;return new Proxy({},{has:(t,r)=>e.classList.contains(r),get:(t,r)=>e.classList.contains(r),set:(t,r,i)=>e.classList.remove(r)||!!i&&e.classList.add(r)||!0,ownKeys:()=>Array.from(e.classList)})}}),(()=>{const e=Symbol(" _template cleanup_ "),t=Symbol(" _template model_ ");Object.defineProperty(HTMLTemplateElement.prototype,"template",{configurable:!1,enumerable:!1,get:function(){return this[t]},set:function(r){if(this[t]=r,e in this&&this[e](),this.parentNode){var i=(Node.Scope.continue(this)||{}).overrides,a=(Array.isArray(r)?r:[r]).filter((e=>null!=e)).map((e=>this.content.cloneNode(!0).map(e,i))).flatMap((e=>Array.from(e.childNodes)));this[e]=()=>{a.forEach((e=>e.parentNode&&e.parentNode.removeChild(e))),delete this[e]},this.parentNode.insertBefore(a.reduce(((e,t)=>e.appendChild(t)&&e),document.createDocumentFragment()),this.nextSibling)}}})})();
-      })();
-    </script>
     <script id="js-extension">
       Object.configure = (target, source) => // assigns only pre-existing values to the target from the source
         Object.keys(source||{})
@@ -248,7 +243,7 @@
     </script>
     <script id="js-application">
       class Application {
-        #view; // The bound DOM Node
+        #view; // The bound DOM Node NOTE: Doing this tangles view/model concerns
         #data = new Cache('foodbook'); // Session persistence
 
         get times() { // suggested times
