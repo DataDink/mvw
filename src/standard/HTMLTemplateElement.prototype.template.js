@@ -21,7 +21,8 @@
         content.pop().forEach(element => element.parentNode && element.parentNode.removeChild(element));
       }
       for (var i = content.length; i < bindings.length; i++) { // add new items
-        var insert = (i > 0 ? content[i-1][0] ?? this : this).nextSibling;
+        var predecessor = content[content.length - 1];
+        var insert = (predecessor ? predecessor[predecessor.length - 1] : this).nextSibling;
         var elements = Array.from(this.content.cloneNode(true).map(bindings[i], configuration).childNodes);
         content.push(elements);
         elements.forEach(element => this.parentNode.insertBefore(element, insert));

@@ -57,6 +57,26 @@ test('recycles elements', () => {
   expect(b === container.childNodes[2]).toBe(false);
 });
 
-test('template keeps same scope', () => {
+test('inserts after template', () => {
+  var container = document.createElement('div');
+  var template = container.appendChild(document.createElement('template'));
+  template.innerHTML = '<span></span>';
+  template.template = {};
+  expect(container.childNodes.length).toBe(2);
+  expect(container.childNodes[0] === template).toBe(true);
+});
 
+test('inserts after recycled', () => {
+  var container = document.createElement('div');
+  var template = container.appendChild(document.createElement('template'));
+  template.innerHTML = '<span></span><span></span>';
+  template.template = [{}];
+  expect(container.childNodes.length).toBe(3);
+  var recycledA = container.childNodes[1];
+  var recycledB = container.childNodes[2];
+  template.template = [{},{}];
+  expect(container.childNodes.length).toBe(5);
+  var snapshot = Array.from(container.childNodes);
+  expect(snapshot.indexOf(recycledA)).toBe(1);
+  expect(snapshot.indexOf(recycledB)).toBe(2);
 });
