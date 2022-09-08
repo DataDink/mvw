@@ -1,4 +1,4 @@
-console.log("https://github.com/DataDink/mvw core v1.2.0");
+console.log("https://github.com/DataDink/mvw core v1.2.1");
 (() => {(() => {
     let Lib = (function() {
         return this;

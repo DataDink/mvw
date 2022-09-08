@@ -222,6 +222,9 @@ document.body.map(model);
 ```
 
 # Version Notes
+* 1.2.1
+  * Hotfixes
+    * Fix to HTMLTemplateElement.prototype.template that was causing elements to be reversed.
 * 1.2
   * Added
     * mvw.core
