@@ -6,12 +6,23 @@
 * @documentation: https://github.com/DataDink/mvw/wiki
 */
 
-(function() { return this; })().MVW = // Expose to global namespace
+if (typeof(MVW) !== 'undefined') { console.warn('MVW has already been loaded to this page.'); }
+
+Object.getPrototypeOf((function() { return this; })()).MVW = // Expose to global namespace
 /**
 * @class {MVW} - MVW configuration and root namespace
 */
 Object.freeze(
   class MVW {
+    /**
+    * @function conflictGuard - Pops a standard warning message if the condition is true
+    * @parameter {bool} condition - if true, a standard warning will be sent to console
+    */
+    static conflictGuard(condition) {
+      if (condition) {
+        console.warn(`Warning: mvw ${MVW.Settings.get('version')} may not be compatible with this browser/environment/version`);
+      }
+    }
     /**
     * @class {Settings} - A global registry for MVW settings
     */
@@ -51,12 +62,13 @@ Object.freeze(
         * @returns {object} - An object with all of the currently registered MVW settings
         */
         static export(...overrides) {
-          return overrides
-            .reduce((ex,or) =>
-              Object.keys(or)
-                .filter(name => name in ex)
-                .forEach(name => ex[name]=or[name])
-            &&ex||ex, Object.assign({}, Settings.#reg));
+          return overrides.reduce((ex,or) =>
+            Object.keys(or)
+              .filter(name => name in ex)
+              .forEach(name => ex[name]=or[name])
+            &&ex||ex,
+            Object.assign({}, Settings.#reg)
+          );
         }
       }
     );

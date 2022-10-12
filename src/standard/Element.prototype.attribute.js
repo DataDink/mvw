@@ -6,6 +6,8 @@
 * @documentation: https://github.com/DataDink/mvw/wiki
 */
 
+MVW.conflictGuard('attribute' in HTMLElement.prototype);
+
 /**
 * @constant {Symbol} Index - The index for caching to the element
 */

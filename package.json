@@ -8,7 +8,10 @@
     "test": "node build\njest"
   },
   "jest": {
-    "testEnvironment": "jsdom"
+    "testEnvironment": "jsdom",
+    "setupFiles": [
+      "fake-indexeddb/auto"
+    ]
   },
   "keywords": [
     "web",
@@ -30,6 +33,7 @@
   "author": "DataDink",
   "license": "Unlicense",
   "devDependencies": {
+    "fake-indexeddb": "^4.0.0",
     "jest": "^27.5.1",
     "terser": "^5.12.0"
   }

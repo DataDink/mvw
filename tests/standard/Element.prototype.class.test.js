@@ -1,5 +1,4 @@
 require('../environment.js');
-require('../../dst/debug/mvw.standard.js');
 
 test('map a class to a boolean', () => {
   var model = {value: true};

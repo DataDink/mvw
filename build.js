@@ -93,6 +93,7 @@ async function build(name, sources) {
       }
     }
   }
+  document += `;MVW.Settings.register('version', '${name}v${package.version}');`;
 
   name = `mvw.${name}`;
   var debugFN = `${name}.js`;
@@ -104,7 +105,7 @@ async function build(name, sources) {
     var codeFN = `${name}${profile.extension}`;
     var codePT = path.join(settings.buildOutput, codeFN);
     var code = (await minify(document, profile.settings)).code;
-    var output = `console.log("${path.join(settings.webLocation,codeFN)}");\n${code}\n\n`;
+    var output = `console.log("${settings.webLocation}/${codeFN}");\n${code}\n\n`;
     await fs.writeFile(codePT, output);
     log(`\t&green&dim${codePT}:\t${output.length} bytes`);
   }

@@ -1,5 +1,4 @@
 require('../environment.js');
-require('../../dst/debug/mvw.minimal.js');
 
 test('call()', () => {
   expect(Object.prototype.queryMember.call()).toBeUndefined();

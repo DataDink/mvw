@@ -1,5 +1,4 @@
 require('../environment.js');
-require('../../dst/debug/mvw.minimal.js');
 
 // NOTE: Do not re-use registers across tests
 

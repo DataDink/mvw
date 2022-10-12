@@ -6,6 +6,8 @@
 * @documentation: https://github.com/DataDink/mvw/wiki
 */
 
+MVW.conflictGuard('shown' in HTMLElement.prototype);
+
 /**
 * @member {bool} shown - Inverse property of HTMLElement.prototype.hidden
 */

@@ -1,5 +1,4 @@
 require('../environment.js');
-require('../../dst/debug/mvw.extended.js');
 
 test('init without attribute', async () => {
   var element = document.createElement('input');

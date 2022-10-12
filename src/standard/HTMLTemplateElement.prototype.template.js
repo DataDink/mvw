@@ -6,6 +6,8 @@
 * @documentation: https://github.com/DataDink/mvw/wiki
 */
 
+MVW.conflictGuard('template' in HTMLTemplateElement.prototype);
+
 /**
 * @constant {Symbol} Content - caching index for elements belonging to the template
 */

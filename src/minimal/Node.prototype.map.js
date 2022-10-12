@@ -6,6 +6,8 @@
 * @documentation: https://github.com/DataDink/mvw/wiki
 */
 
+MVW.conflictGuard('map' in HTMLElement.prototype);
+
 /**
 * @const {Symbol} MapIndex - The index used to cache to an node
 */

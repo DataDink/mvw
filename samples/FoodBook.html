@@ -133,28 +133,28 @@
       }
     </style>
     <style id="css-application">
-      [data-onclick] { cursor: pointer; }
+      [bind-onclick] { cursor: pointer; }
     </style>
   </head>
   <body>
     <header>
       <menu>
-        <button data-onclick="downyear" title="previous year">&lt;&lt;&lt;&lt;</button>
-        <button data-onclick="downmonth" title="previous month">&lt;&lt;&lt;</button>
-        <button data-onclick="downactivity" title="previous activity">&lt;&lt;</button>
-        <button data-onclick="downday" title="previous page">&lt;</button>
+        <button bind-onclick="downyear" title="previous year">&lt;&lt;&lt;&lt;</button>
+        <button bind-onclick="downmonth" title="previous month">&lt;&lt;&lt;</button>
+        <button bind-onclick="downactivity" title="previous activity">&lt;&lt;</button>
+        <button bind-onclick="downday" title="previous page">&lt;</button>
       </menu>
-      <h1 data-onclick="today" title="click to return to today's page">
-        <span data-textContent="dayName"></span>,
-        <span data-textContent="monthName"></span>
-        <span data-textContent="day"></span>
-        <span data-textContent="year"></span>
+      <h1 bind-onclick="today" title="click to return to today's page">
+        <span bind-textContent="dayName"></span>,
+        <span bind-textContent="monthName"></span>
+        <span bind-textContent="day"></span>
+        <span bind-textContent="year"></span>
       </h1>
       <menu>
-        <button data-onclick="upday" title="next page">&gt;</button>
-        <button data-onclick="upactivity" title="next activity">&gt;&gt;</button>
-        <button data-onclick="upmonth" title="next month">&gt;&gt;&gt;</button>
-        <button data-onclick="upyear" title="next year">&gt;&gt;&gt;&gt;</button>
+        <button bind-onclick="upday" title="next page">&gt;</button>
+        <button bind-onclick="upactivity" title="next activity">&gt;&gt;</button>
+        <button bind-onclick="upmonth" title="next month">&gt;&gt;&gt;</button>
+        <button bind-onclick="upyear" title="next year">&gt;&gt;&gt;&gt;</button>
       </menu>
     </header>
     <main>
@@ -163,41 +163,41 @@
           <li class="actions"></li>
           <li class="time">Time</li>
           <li class="name">Food</li>
-          <template data-template="metrics">
+          <template bind-template="metrics">
             <li class="metric">
-              <input type="text" data-attribute-value="name" data-onchange="rename" />
-              <button type="button" class="danger tiny" data-onclick="remove">x</button>
-              <button type="button" class="safe tiny" data-onclick="insert">+</button>
+              <input type="text" bind-attribute-value="name" bind-onchange="rename" />
+              <button type="button" class="danger tiny" bind-onclick="remove">x</button>
+              <button type="button" class="safe tiny" bind-onclick="insert">+</button>
             </li>
           </template>
         </ul>
       </header>
       <ul class="items">
-        <template data-template="page">
+        <template bind-template="page">
           <li class="item">
             <menu class="actions">
-              <button class="danger small" type="button" data-onclick="remove">x</button>
+              <button class="danger small" type="button" bind-onclick="remove">x</button>
             </menu>
-            <input class="time" name="time" type="text" data-attribute-value="time" data-onchange="reschedule" list="times" autocomplete="off"/>
-            <input class="name" name="name" type="text" data-attribute-value="name" data-onchange="rename" list="item-names" autocomplete="off"/>
-            <template data-template="metricsView">
-              <input class="metric" data-attribute-name="index" data-attribute-value="value" data-onchange="edit" autocomplete="off"/>
+            <input class="time" name="time" type="text" bind-attribute-value="time" bind-onchange="reschedule" list="times" autocomplete="off"/>
+            <input class="name" name="name" type="text" bind-attribute-value="name" bind-onchange="rename" list="item-names" autocomplete="off"/>
+            <template bind-template="metricsView">
+              <input class="metric" bind-attribute-name="index" bind-attribute-value="value" bind-onchange="edit" autocomplete="off"/>
             </template>
           </li>
         </template>
       </ul>
       <menu>
-        <button class="safe small" type="button" data-onclick="createItem">+</button>
+        <button class="safe small" type="button" bind-onclick="createItem">+</button>
       </menu>
     </main>
     <datalist id="item-names">
-      <template data-template="names">
-        <option data-attribute-value="name" />
+      <template bind-template="names">
+        <option bind-attribute-value="name" />
       </template>
     </datalist>
     <datalist id="times">
-      <template data-template="times">
-        <option data-attribute-value="text" />
+      <template bind-template="times">
+        <option bind-attribute-value="text" />
       </template>
     </datalist>
     <script id="js-extension">

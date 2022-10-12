@@ -6,6 +6,8 @@
 * @documentation: https://github.com/DataDink/mvw/wiki
 */
 
+MVW.conflictGuard('queryMember' in Object.prototype);
+
 /**
 * @const {string} Delim - The delimiter used when parsing member selectors
 */

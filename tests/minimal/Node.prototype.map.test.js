@@ -1,5 +1,4 @@
 require('../environment.js');
-require('../../dst/debug/mvw.minimal.js');
 
 test('model.value to div-textContent', () => {
   var element = document.createElement('div');
