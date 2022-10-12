@@ -1,8 +1,9 @@
-require('../../dst/mvw.standard.js');
+require('../environment.js');
+require('../../dst/debug/mvw.standard.js');
 
 test('map a template to a model', () => {
   var view = document.createElement('div');
-  view.innerHTML = '<template data-template="item"><span data-textcontent="value"></span></template>';
+  view.innerHTML = '<template bind-template="item"><span bind-textcontent="value"></span></template>';
   var model = {item: {value: 'asdf'}};
   view.map(model);
   var spans = Array.from(view.querySelectorAll('span'));
@@ -12,7 +13,7 @@ test('map a template to a model', () => {
 
 test('map a template to an array', () => {
   var view = document.createElement('div');
-  view.innerHTML = '<template data-template="items"><span data-textcontent="value"></span></template>';
+  view.innerHTML = '<template bind-template="items"><span bind-textcontent="value"></span></template>';
   var model = {items: [{value: 'a'}, {value: 'b'}, {value: 'c'}]};
   view.map(model);
   var spans = Array.from(view.querySelectorAll('span'));

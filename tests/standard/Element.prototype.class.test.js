@@ -1,9 +1,10 @@
-require('../../dst/mvw.standard.js');
+require('../environment.js');
+require('../../dst/debug/mvw.standard.js');
 
 test('map a class to a boolean', () => {
   var model = {value: true};
   var element = document.createElement('div');
-  element.setAttribute('data-class-test', 'value');
+  element.setAttribute('bind-class-test', 'value');
   element.map(model);
   expect(element.classList.contains('test')).toBe(true);
   model.value = false;
