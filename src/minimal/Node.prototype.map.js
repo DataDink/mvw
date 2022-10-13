@@ -66,7 +66,7 @@ Object.defineProperty(Node.prototype, 'map', {
         }
       }
 
-      // Recurse child nodes
+      // Recurse children
       for (var i=0, children=Array.from(this.childNodes), l=children.length; i<l; ++i) {
         if ((children[i][MapIndex] || config) === config) { children[i].map(model); }
       }
