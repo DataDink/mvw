@@ -1,82 +1,183 @@
 require('../environment.js');
 
-test('map a template to a model', () => {
+test('[bind-template=item]{}', () => {
   var view = document.createElement('div');
-  view.innerHTML = '<template bind-template="item"><span bind-textcontent="value"></span></template>';
-  var model = {item: {value: 'asdf'}};
+  view.innerHTML = '<template bind-template="item"><span bind-result="value"></span></template>';
+  var model = {};
   view.bind(model);
-  var spans = Array.from(view.querySelectorAll('span'));
-  expect(spans.length).toBe(1);
-  expect(spans[0].textContent).toBe('asdf');
+  var elements = view.children;
+  expect(elements.length).toBe(1);
+  expect(elements[0] instanceof HTMLTemplateElement).toBe(true);
 });
 
-test('map a template to an array', () => {
+test('[bind-template=item]{item:undefined}', () => {
   var view = document.createElement('div');
-  view.innerHTML = '<template bind-template="items"><span bind-textcontent="value"></span></template>';
-  var model = {items: [{value: 'a'}, {value: 'b'}, {value: 'c'}]};
+  view.innerHTML = '<template bind-template="item"><span bind-result="value"></span></template>';
+  var model = {item:undefined};
   view.bind(model);
-  var spans = Array.from(view.querySelectorAll('span'));
-  expect(spans.length).toBe(3);
-  expect(spans[0].textContent).toBe('a');
-  expect(spans[1].textContent).toBe('b');
-  expect(spans[2].textContent).toBe('c');
+  var elements = view.children;
+  expect(elements.length).toBe(1);
+  expect(elements[0] instanceof HTMLTemplateElement).toBe(true);
 });
 
-test('returns data', () => {
-  var data = {};
-  var template = document.createElement('template');
-  template.template = data;
-  expect(template.template).toBe(data);
+test('[bind-template=item]{item:null}', () => {
+  var view = document.createElement('div');
+  view.innerHTML = '<template bind-template="item"><span bind-result="value"></span></template>';
+  var model = {item:null};
+  view.bind(model);
+  var elements = view.children;
+  expect(elements.length).toBe(1);
+  expect(elements[0] instanceof HTMLTemplateElement).toBe(true);
 });
 
-test('cleans up on remap', () => {
-  var container = document.createElement('div');
-  var template = container.appendChild(document.createElement('template'));
-  template.innerHTML = '<span></span>';
-  template.template = [{}, {}, {}];
-  expect(container.childNodes.length).toBe(4);
-  template.template = [{}];
-  expect(container.childNodes.length).toBe(2);
-  template.template = [];
-  expect(container.childNodes.length).toBe(1);
+test('[bind-template=item]{item:number}', () => {
+  var view = document.createElement('div');
+  view.innerHTML = '<template bind-template="item"><span bind-result="value"></span></template>';
+  var model = {item:0};
+  view.bind(model);
+  var elements = view.children;
+  expect(elements.length).toBe(2);
+  expect(elements[0] instanceof HTMLTemplateElement).toBe(true);
+  expect(elements[1] instanceof HTMLSpanElement).toBe(true);
+  expect(elements[1].result).toBeUndefined();
 });
 
-test('recycles elements', () => {
-  var container = document.createElement('div');
-  var template = container.appendChild(document.createElement('template'));
-  template.innerHTML = '<span></span>';
-  template.template = [{}, {}];
-  var a = container.childNodes[1];
-  var b = container.childNodes[2];
-  template.template = [{}, {}];
-  expect(a === container.childNodes[1]).toBe(true);
-  expect(b === container.childNodes[2]).toBe(true);
-  template.template = [];
-  template.template = [{}, {}];
-  expect(a === container.childNodes[1]).toBe(false);
-  expect(b === container.childNodes[2]).toBe(false);
+test('[bind-template=item]{item:bool}', () => {
+  var view = document.createElement('div');
+  view.innerHTML = '<template bind-template="item"><span bind-result="value"></span></template>';
+  var model = {item:true};
+  view.bind(model);
+  var elements = view.children;
+  expect(elements.length).toBe(2);
+  expect(elements[0] instanceof HTMLTemplateElement).toBe(true);
+  expect(elements[1] instanceof HTMLSpanElement).toBe(true);
+  expect(elements[1].result).toBeUndefined();
 });
 
-test('inserts after template', () => {
-  var container = document.createElement('div');
-  var template = container.appendChild(document.createElement('template'));
-  template.innerHTML = '<span></span>';
-  template.template = {};
-  expect(container.childNodes.length).toBe(2);
-  expect(container.childNodes[0] === template).toBe(true);
+test('[bind-template=item]{item:string}', () => {
+  var view = document.createElement('div');
+  view.innerHTML = '<template bind-template="item"><span bind-result="value"></span></template>';
+  var model = {item:'asdf'};
+  view.bind(model);
+  var elements = view.children;
+  expect(elements.length).toBe(2);
+  expect(elements[0] instanceof HTMLTemplateElement).toBe(true);
+  expect(elements[1] instanceof HTMLSpanElement).toBe(true);
+  expect(elements[1].result).toBeUndefined();
 });
 
-test('inserts after recycled', () => {
-  var container = document.createElement('div');
-  var template = container.appendChild(document.createElement('template'));
-  template.innerHTML = '<span></span><span></span>';
-  template.template = [{}];
-  expect(container.childNodes.length).toBe(3);
-  var recycledA = container.childNodes[1];
-  var recycledB = container.childNodes[2];
-  template.template = [{},{}];
-  expect(container.childNodes.length).toBe(5);
-  var snapshot = Array.from(container.childNodes);
-  expect(snapshot.indexOf(recycledA)).toBe(1);
-  expect(snapshot.indexOf(recycledB)).toBe(2);
+test('[bind-template=item]{item,value}', () => {
+  var view = document.createElement('div');
+  view.innerHTML = '<template bind-template="item"><span bind-result="value"></span></template>';
+  var model = {item:{value:123}};
+  view.bind(model);
+  var elements = view.children;
+  expect(elements.length).toBe(2);
+  expect(elements[0] instanceof HTMLTemplateElement).toBe(true);
+  expect(elements[1] instanceof HTMLSpanElement).toBe(true);
+  expect(elements[1].result).toBe(model.item.value);
+});
+
+test('[bind-template=item]{item,[value]}', () => {
+  var view = document.createElement('div');
+  view.innerHTML = '<template bind-template="item"><span bind-result="value"></span></template>';
+  var model = {item:[{value:123}]};
+  view.bind(model);
+  var elements = view.children;
+  expect(elements.length).toBe(2);
+  expect(elements[0] instanceof HTMLTemplateElement).toBe(true);
+  expect(elements[1] instanceof HTMLSpanElement).toBe(true);
+  expect(elements[1].result).toBe(model.item[0].value);
+});
+
+test('[bind-template=item]{item,[value, value, value]}', () => {
+  var view = document.createElement('div');
+  view.innerHTML = '<template bind-template="item"><span bind-result="value"></span></template>';
+  var model = {item:[{value:123}, {value:456}, {value:789}]};
+  view.bind(model);
+  var elements = view.children;
+  expect(elements.length).toBe(4);
+  expect(elements[0] instanceof HTMLTemplateElement).toBe(true);
+  expect(elements[1] instanceof HTMLSpanElement).toBe(true);
+  expect(elements[1].result).toBe(model.item[0].value);
+  expect(elements[2].result).toBe(model.item[1].value);
+  expect(elements[3].result).toBe(model.item[2].value);
+});
+
+test('[bind-template=item]{item,[undefined, null, {}]}', () => {
+  var view = document.createElement('div');
+  view.innerHTML = '<template bind-template="item"><span bind-result="value"></span></template>';
+  var model = {item:[undefined, null, {}]};
+  view.bind(model);
+  var elements = view.children;
+  expect(elements.length).toBe(4);
+  expect(elements[0] instanceof HTMLTemplateElement).toBe(true);
+  expect(elements[1] instanceof HTMLSpanElement).toBe(true);
+  expect(elements[1].result).toBeUndefined();
+  expect(elements[2].result).toBeUndefined();
+  expect(elements[3].result).toBeUndefined();
+});
+
+test('[bind-template=item]{x3}{x3}', () => {
+  var view = document.createElement('div');
+  view.innerHTML = '<template bind-template="item"><span bind-result="value"></span></template>';
+  var modelA = {item:[{value:123}, {value:456}, {value:789}]};
+  view.bind(modelA);
+  var snapshot = Array.from(view.children);
+  var modelB = {item:[{value:'abc'}, {value:'def'}, {value:'ghi'}]};
+  view.bind(modelB);
+  var capture = Array.from(view.children);
+  expect(capture.length).toBe(snapshot.length);
+  for (var i = 0; i < capture.length; i++) {
+    expect(capture[i]).toBe(snapshot[i]);
+  }
+  for (var i = 0; i < modelB.item.length; i++) {
+    expect(capture[i+1].result).toBe(modelB.item[i].value);
+  }
+});
+
+test('[bind-template=item]{x3}{x2}', () => {
+  var view = document.createElement('div');
+  view.innerHTML = '<template bind-template="item"><span bind-result="value"></span></template>';
+  var modelA = {item:[{value:123}, {value:456}, {value:789}]};
+  view.bind(modelA);
+  var snapshot = Array.from(view.children);
+  var modelB = {item:[{value:'abc'}, {value:'def'}]};
+  view.bind(modelB);
+  var capture = Array.from(view.children);
+  expect(snapshot.length).toBe(4);
+  expect(capture.length).toBe(3);
+  for (var i = 0; i < capture.length; i++) {
+    expect(capture[i]).toBe(snapshot[i]);
+  }
+  for (var i = 0; i < modelB.item.length; i++) {
+    expect(capture[i+1].result).toBe(modelB.item[i].value);
+  }
+});
+
+test('[bind-template=item]{x2}{x3}', () => {
+  var view = document.createElement('div');
+  view.innerHTML = '<template bind-template="item"><span bind-result="value"></span></template>';
+  var modelA = {item:[{value:123}, {value:456}]};
+  view.bind(modelA);
+  var snapshot = Array.from(view.children);
+  var modelB = {item:[{value:'abc'}, {value:'def'}, {value:'ghi'}]};
+  view.bind(modelB);
+  var capture = Array.from(view.children);
+  expect(snapshot.length).toBe(3);
+  expect(capture.length).toBe(4);
+  for (var i = 0; i < snapshot.length; i++) {
+    expect(capture[i]).toBe(snapshot[i]);
+  }
+  for (var i = 0; i < modelB.item.length; i++) {
+    expect(capture[i+1].result).toBe(modelB.item[i].value);
+  }
+});
+
+test('.template===.template', () => {
+  var view = document.createElement('div');
+  view.innerHTML = '<template bind-template="item"></template>';
+  var model = {item: {}};
+  view.bind(model);
+  expect(view.childNodes[0].template).toBe(model.item);
 });

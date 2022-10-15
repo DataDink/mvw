@@ -66,7 +66,7 @@ const Configure = Bind.configure = Object.freeze(function(settings, node, model)
     for (var child of Array.from(node.childNodes)) {
       var scope = Settings(child);
       if (scope && scope !== settings) { continue; }
-      Configure(settings, child, model);
+      child.bind(model);
     }
   }
 

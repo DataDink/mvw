@@ -28,26 +28,26 @@ const Template = Object.defineProperty(HTMLTemplateElement.prototype, 'template'
   configurable: false, enumerable: false,
   get: function() { return this[Data]; },
   set: function(value) {
-    this[Data] = value; // for the getter
+    this[Data] = value;
+    var settings = Object.freeze(MVW.Settings.export(Node.prototype.bind.settings(this)));
     var content = this[Content] || (this[Content]=[]);
-    var settings = this.bind.settings(this);
     var bindings = value == null ? []
       : typeof(value) === 'object' && Symbol.iterator in value ? Array.from(value)
       : [value];
-    for (var i = 0; i < bindings.length && i < content.length; i++) { // rebind existing
-      content[i].forEach(element => element.bind.configure(settings, bindings[i]));
+    for (var i=0; i < bindings.length && i < content.length; i++) { // rebind existing
+      content[i].forEach(node => Node.prototype.bind.configure(settings, node, bindings[i]));
     }
     while (content.length > bindings.length) { // remove excess
-      content.pop().forEach(element => element.parentNode && element.parentNode.removeChild(element));
+      content.pop().forEach(node => node.parentNode && node.parentNode.removeChild(node));
     }
     for (var i = content.length; i < bindings.length; i++) { // add new items
       var sibling = content[content.length - 1];
       var insert = (sibling ? sibling[sibling.length - 1] : this).nextSibling;
       var fragment = this.content.cloneNode(true);
-      fragment.bind.configure(settings, bindings[i]);
-      var elements = Array.from(fragment.childNodes);
-      content.push(elements);
-      elements.forEach(element => this.parentNode.insertBefore(element, insert));
+      Node.prototype.bind.configure(settings, fragment, bindings[i]);
+      var nodes = Array.from(fragment.childNodes);
+      content.push(nodes);
+      nodes.forEach(node => this.parentNode.insertBefore(node, insert));
     }
   }
 });

@@ -568,3 +568,38 @@ test('configure(null, node[bind-result-result=value.value], {value.value})', () 
   expect(Node.prototype.bind.configure(null, node, model)).toBe(node);
   expect(node.result.result).toBe(true);
 });
+
+test('child.bind -> parent.bind', () => {
+  var parent = document.createElement('div');
+  var child = parent.appendChild(document.createElement('div'));
+  parent.setAttribute('bind-result', 'value');
+  child.setAttribute('bind-result', 'value');
+  child.bind({value:123});
+  parent.bind({value:321});
+  expect(child.result).toBe(123);
+  expect(parent.result).toBe(321);
+});
+
+test('parent.bind -> child.bind -> parent.bind', () => {
+  var parent = document.createElement('div');
+  var child = parent.appendChild(document.createElement('div'));
+  parent.setAttribute('bind-result', 'value');
+  child.setAttribute('bind-result', 'value');
+  parent.bind({value:123});
+  child.bind({value:321});
+  parent.bind({value:'abc'});
+  expect(child.result).toBe('abc');
+  expect(parent.result).toBe('abc');
+});
+
+test('parent.bind -> child.configure -> parent.bind', () => {
+  var parent = document.createElement('div');
+  var child = parent.appendChild(document.createElement('div'));
+  parent.setAttribute('bind-result', 'value');
+  child.setAttribute('bind-result', 'value');
+  parent.bind({value:123});
+  Node.prototype.bind.configure({}, child, {value:321});
+  parent.bind({value:'abc'});
+  expect(child.result).toBe(321);
+  expect(parent.result).toBe('abc');
+});
