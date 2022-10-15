@@ -29,13 +29,13 @@ const Template = Object.defineProperty(HTMLTemplateElement.prototype, 'template'
   get: function() { return this[Data]; },
   set: function(value) {
     this[Data] = value;
-    var settings = Object.freeze(MVW.Settings.export(Node.prototype.bind.settings(this)));
+    var settings = Node.prototype.bind.settings(this);
     var content = this[Content] || (this[Content]=[]);
     var bindings = value == null ? []
       : typeof(value) === 'object' && Symbol.iterator in value ? Array.from(value)
       : [value];
     for (var i=0; i < bindings.length && i < content.length; i++) { // rebind existing
-      content[i].forEach(node => Node.prototype.bind.configure(settings, node, bindings[i]));
+      content[i].forEach(node => Node.prototype.bind.configure(null, node, bindings[i]));
     }
     while (content.length > bindings.length) { // remove excess
       content.pop().forEach(node => node.parentNode && node.parentNode.removeChild(node));

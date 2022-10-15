@@ -181,3 +181,16 @@ test('.template===.template', () => {
   view.bind(model);
   expect(view.childNodes[0].template).toBe(model.item);
 });
+
+test('rebind template->parent->child', () => {
+  var root = document.createElement('div');
+  var template = root.appendChild(document.createElement('template'));
+  var parent = template.content.appendChild(document.createElement('div'));
+  var child = parent.appendChild(document.createElement('div'));
+  template.setAttribute('bind-template', 'model')
+  child.setAttribute('bind-result', 'value');
+  root.bind({model: {value: 123}});
+  expect(root.querySelector('[bind-result]').result).toBe(123);
+  root.bind({model: {value: 321}});
+  expect(root.querySelector('[bind-result]').result).toBe(321);
+});

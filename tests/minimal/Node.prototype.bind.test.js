@@ -603,3 +603,54 @@ test('parent.bind -> child.configure -> parent.bind', () => {
   expect(child.result).toBe(321);
   expect(parent.result).toBe('abc');
 });
+
+test('[bind=model.method]', () => {
+  var node = document.createElement('div');
+  var data = {model: {method: function() { return [this, ...arguments]; }}};
+  node.setAttribute('bind-result', 'model.method');
+  node.bind(data);
+  var test = node.result(1, 2, 3);
+  expect(test.length).toBe(4);
+  expect(test[0]).toBe(data.model);
+  expect(test[1]).toBe(1);
+  expect(test[2]).toBe(2);
+  expect(test[3]).toBe(3);
+});
+
+test('[bind=model.method()]', () => {
+  var node = document.createElement('div');
+  var data = {model: {method: function() { return [this, ...arguments]; }}};
+  node.setAttribute('bind-result', 'model.method()');
+  node[''] = 123;
+  node.bind(data);
+  var test = node.result(1, 2, 3);
+  expect(test.length).toBe(2);
+  expect(test[0]).toBe(data.model);
+  expect(test[1]).toBe(123);
+});
+
+test('[bind=model.method(source.a)]', () => {
+  var node = document.createElement('div');
+  var data = {model: {method: function() { return [this, ...arguments]; }}};
+  node.setAttribute('bind-result', 'model.method(source.a)');
+  node.source = {a: 123};
+  node.bind(data);
+  var test = node.result(1, 2, 3);
+  expect(test.length).toBe(2);
+  expect(test[0]).toBe(data.model);
+  expect(test[1]).toBe(123);
+});
+
+test('[bind=model.method(source.a, source.b, source.c)]', () => {
+  var node = document.createElement('div');
+  var data = {model: {method: function() { return [this, ...arguments]; }}};
+  node.setAttribute('bind-result', 'model.method(source.a, source.b, source.c)');
+  node.source = {a: 123, b: 456, c: 789};
+  node.bind(data);
+  var test = node.result(1, 2, 3);
+  expect(test.length).toBe(4);
+  expect(test[0]).toBe(data.model);
+  expect(test[1]).toBe(123);
+  expect(test[2]).toBe(456);
+  expect(test[3]).toBe(789);
+});

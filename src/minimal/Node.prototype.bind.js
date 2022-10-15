@@ -52,11 +52,11 @@ const Configure = Bind.configure = Object.freeze(function(settings, node, model)
       var value = !complete||source==null ? undefined : source[member];
       if (typeof(value)==='function') {
         value = ((func, context, args, index, config) => function() {
-          return func.call(context, args.length
-            ? params.map(s=>index.memberSelector.configure(config,index,s))
+          return func.apply(context, args.length
+            ? args.map(s=>Object.prototype.memberSelector.configure(config,index,s))
             : arguments
           );
-        })(value, source, (query.length > 0 ? query[1].split(')')[0].slit(',') : []), node, settings);
+        })(value, source, (query.length>1?query[1].split(')')[0].split(',').map(s=>s.trim()):[]), node, settings);
       }
       binding[binder] = value;
     }
