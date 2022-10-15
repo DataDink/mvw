@@ -1,5 +1,5 @@
 /**
-* @component:     Extension - HTMLInputElement.prototype.autosize
+* @component:     Extension - Element[autosize].js
 * @product:       MVW - A micro extension framework
 * @dependencies:  MVW.js
 * @documentation: https://github.com/DataDink/mvw/wiki
@@ -19,9 +19,9 @@ const AttributeName = 'autosize';
 const EventName = 'autosize';
 
 /**
-* @const {Symbol} SpamBlock - The spam-block index
+* @const {Array<string>} TriggerEvents - The triggering events for an autosize event
 */
-const SpamBlock = Symbol('spam-blocker');
+const TriggerEvents = ['input', 'paste'];
 
 /**
 * @class {CustomEvent} AutoSizeEvent - The custom autosize event type
@@ -36,9 +36,8 @@ class AutoSizeEvent extends Event {
   }
   static handler(e) {
     var target = e&&e.target||this;
-    if (SpamBlock in target) { return; }
-    target[SpamBlock] = true;
-
+    if (!target.hasAttribute(AttributeName)) { return; }
+    
     var restoreWidth = target.style.width;
     target.style.width = '0px';
     target.style.width = `${target.scrollWidth}px`;
@@ -50,36 +49,38 @@ class AutoSizeEvent extends Event {
     if (target.style.height === '0px') { target.style.height = restoreHeight; }
 
     target.dispatchEvent(new AutoSizeEvent());
-    delete target[SpamBlock];
   }
 }
-
-/**
-* @const {Array<string>} TriggerEvents - The triggering events for an autosize event
-*/
-const TriggerEvents = ['input', 'change', 'focus', 'blur', 'paste'];
 
 /**
 * @hook {MutationObserver} document - Hooks into the dom to listen for autosize attribute mutations
 */
 new MutationObserver(records => {
   records.forEach(record => {
-    var elements = record.type === 'childList'
+    subscribe(record.type === 'childList'
       ? Array.from(record.addedNodes||[])
-          .filter(n => n instanceof Element)
-          .flatMap(e => [e, ...(e.querySelectorAll(`[${AttributeName}]`)||[])])
-      : [record.target];
-    for (var element of elements) {
-      TriggerEvents.forEach(name => element.removeEventListener(name, AutoSizeEvent.handler));
-      if (!element.hasAttribute(AttributeName)) { return; }
-      TriggerEvents.forEach(name => element.addEventListener(name, AutoSizeEvent.handler));
-      AutoSizeEvent.handler.call(element);
-    }
+      : [record.target]
+    );
   });
 })
 .observe(document, {
   childList: true,
   subtree: true,
   attributes: true,
-  attributeFilter: [AttributeName]
+  attributeFilter: [AttributeName],
 });
+
+/**
+* @function subscribe - configures the handlers for the element and its descendants
+*/
+function subscribe(elements) {
+  elements.filter(e => e instanceof Element)
+          .flatMap(e => [e, ...e.querySelectorAll(`[${AttributeName}]`)])
+          .forEach(e => {
+            TriggerEvents.forEach(name => e.removeEventListener(name, AutoSizeEvent.handler));
+            if (!e.hasAttribute(AttributeName)) { return; }
+            TriggerEvents.forEach(name => e.addEventListener(name, AutoSizeEvent.handler));
+            AutoSizeEvent.handler.call(e);
+          });
+}
+subscribe([document.body]);
