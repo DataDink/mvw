@@ -1,9 +1,11 @@
 /**
 * @component:     Extension - HTMLInputElement.prototype.autosize
 * @product:       MVW - A micro extension framework
-* @author:        DataDink - https://github.com/DataDink
-* @license:       Unlicense - https://unlicense.org/
+* @dependencies:  MVW.js
 * @documentation: https://github.com/DataDink/mvw/wiki
+* @license:       Unlicense - https://unlicense.org/
+* @author:        DataDink - https://github.com/DataDink
+* @notes:         Adds styling functionality to inputs similar to inline-block
 */
 
 /**
@@ -15,6 +17,11 @@ const AttributeName = 'autosize';
 * @const {string} EventName - The custom autosize event name
 */
 const EventName = 'autosize';
+
+/**
+* @const {Symbol} SpamBlock - The spam-block index
+*/
+const SpamBlock = Symbol('spam-blocker');
 
 /**
 * @class {CustomEvent} AutoSizeEvent - The custom autosize event type
@@ -29,9 +36,21 @@ class AutoSizeEvent extends Event {
   }
   static handler(e) {
     var target = e&&e.target||this;
+    if (SpamBlock in target) { return; }
+    target[SpamBlock] = true;
+
+    var restoreWidth = target.style.width;
     target.style.width = '0px';
     target.style.width = `${target.scrollWidth}px`;
+    if (target.style.width === '0px') { target.style.width = restoreWidth; }
+
+    var restoreHeight = target.style.height;
+    target.style.height = '0px';
+    target.style.height = `${target.scrollHeight}px`;
+    if (target.style.height === '0px') { target.style.height = restoreHeight; }
+
     target.dispatchEvent(new AutoSizeEvent());
+    delete target[SpamBlock];
   }
 }
 

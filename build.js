@@ -54,7 +54,10 @@ Promise.resolve()
   .then(() => log(''))
   .then(() => buildAll())
   .then(() => log(`&green&brightBuild Complete!`))
-  .catch(e => log(`&red&brightBuild Failed: ${e}`))
+  .catch(e => {
+    log(`&red&brightBuild Failed:`);
+    console.error(e);
+  })
   .then(() => log(settings.stdOutDelim));
 
 async function clean() {

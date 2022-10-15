@@ -95,7 +95,7 @@ test('override with object with value', () => {
   expect(MVW.Settings.get('overridewithobjectwithvalue', {overridewithobjectwithvalue: false})).toBe(false);
 });
 
-test('export no overrides', () => {
+test('export()', () => {
   var basename = 'exportnooverrides';
   var names = [...new Array(3)].map((_,i) => `${basename}${i}`);
   names.forEach(name => MVW.Settings.register(name, true));
@@ -104,7 +104,52 @@ test('export no overrides', () => {
   names.forEach(name => expect(ex[name]).toBe(true));
 });
 
-test('export zero override', () => {
+test('export(undefined)', () => {
+  var basename = 'exportundefinedoverride';
+  var names = [...new Array(3)].map((_,i) => `${basename}${i}`);
+  names.forEach(name => MVW.Settings.register(name, true));
+  var ex = MVW.Settings.export(undefined);
+  names.forEach(name => expect(name in ex).toBe(true));
+  names.forEach(name => expect(ex[name]).toBe(true));
+});
+
+test('export(null)', () => {
+  var basename = 'exportnulloverride';
+  var names = [...new Array(3)].map((_,i) => `${basename}${i}`);
+  names.forEach(name => MVW.Settings.register(name, true));
+  var ex = MVW.Settings.export(null);
+  names.forEach(name => expect(name in ex).toBe(true));
+  names.forEach(name => expect(ex[name]).toBe(true));
+});
+
+test('export(number)', () => {
+  var basename = 'exportnumberoverride';
+  var names = [...new Array(3)].map((_,i) => `${basename}${i}`);
+  names.forEach(name => MVW.Settings.register(name, true));
+  var ex = MVW.Settings.export(0);
+  names.forEach(name => expect(name in ex).toBe(true));
+  names.forEach(name => expect(ex[name]).toBe(true));
+});
+
+test('export(bool)', () => {
+  var basename = 'exportbooloverride';
+  var names = [...new Array(3)].map((_,i) => `${basename}${i}`);
+  names.forEach(name => MVW.Settings.register(name, true));
+  var ex = MVW.Settings.export(false);
+  names.forEach(name => expect(name in ex).toBe(true));
+  names.forEach(name => expect(ex[name]).toBe(true));
+});
+
+test('export(string)', () => {
+  var basename = 'exportstringoverride';
+  var names = [...new Array(3)].map((_,i) => `${basename}${i}`);
+  names.forEach(name => MVW.Settings.register(name, true));
+  var ex = MVW.Settings.export('asdf');
+  names.forEach(name => expect(name in ex).toBe(true));
+  names.forEach(name => expect(ex[name]).toBe(true));
+});
+
+test('export(none)', () => {
   var basename = 'exportzerooverride';
   var names = [...new Array(3)].map((_,i) => `${basename}${i}`);
   names.forEach(name => MVW.Settings.register(name, true));
@@ -113,7 +158,7 @@ test('export zero override', () => {
   names.forEach(name => expect(ex[name]).toBe(true));
 });
 
-test('export one override', () => {
+test('export(one)', () => {
   var basename = 'exportoneoverride';
   var names = [...new Array(3)].map((_,i) => `${basename}${i}`);
   names.forEach(name => MVW.Settings.register(name, true));
@@ -123,7 +168,7 @@ test('export one override', () => {
   names.forEach(name => expect(ex[name]).toBe(true));
 });
 
-test('export three override', () => {
+test('export(three)', () => {
   var basename = 'exportthreeoverride';
   var names = [...new Array(3)].map((_,i) => `${basename}${i}`);
   names.forEach(name => MVW.Settings.register(name, true));
@@ -133,7 +178,7 @@ test('export three override', () => {
   names.forEach(name => expect(ex[name]).toBe(false));
 });
 
-test('export extra override', () => {
+test('export(three+one)', () => {
   var basename = 'exportextraoverride';
   var names = [...new Array(3)].map((_,i) => `${basename}${i}`);
   names.forEach(name => MVW.Settings.register(name, true));

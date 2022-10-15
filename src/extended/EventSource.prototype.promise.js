@@ -1,9 +1,11 @@
 /**
-* @component:     Extension - HTMLInputElement.prototype.autosize
+* @component:     Extension - EventSource.prototype.promise
 * @product:       MVW - A micro extension framework
-* @author:        DataDink - https://github.com/DataDink
-* @license:       Unlicense - https://unlicense.org/
+* @dependencies:  MVW.js
 * @documentation: https://github.com/DataDink/mvw/wiki
+* @license:       Unlicense - https://unlicense.org/
+* @author:        DataDink - https://github.com/DataDink
+* @notes:         Converts from event-based asynchronous patterns to promises/async/await
 */
 
 MVW.conflictGuard('promise' in EventTarget.prototype);
@@ -25,7 +27,7 @@ const Fail = MVW.Settings.register('failureEvents', Object.freeze(['error', 'rej
 */
 Object.defineProperty(EventTarget.prototype, 'promise', {
   enumerable: true, writable: false,
-  value: function(resolve, reject) {
+  value: Object.freeze(function promise(resolve, reject) {
     return new Promise((pass, fail) => {
       var handlers = [
         {key:Pass, override: resolve, callback: pass},
@@ -44,5 +46,5 @@ Object.defineProperty(EventTarget.prototype, 'promise', {
       }}));
       for (var handler of handlers) { this.addEventListener(handler.name, handler.handler); }
     });
-  }
+  })
 });

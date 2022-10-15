@@ -394,7 +394,7 @@
           this.#view = view;
           this.refresh();
         }
-        refresh() { this.#view.map(this); }
+        refresh() { this.#view.bind(this); }
         update() {
           this.#data.lastUpdate = Date.now();
           this.refresh();

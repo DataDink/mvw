@@ -1,9 +1,11 @@
 /**
 * @component:     Extension - HTMLElement.prototype.shown
 * @product:       MVW - A micro extension framework
-* @author:        DataDink - https://github.com/DataDink
-* @license:       Unlicense - https://unlicense.org/
+* @dependencies:  MVW.js
 * @documentation: https://github.com/DataDink/mvw/wiki
+* @license:       Unlicense - https://unlicense.org/
+* @author:        DataDink - https://github.com/DataDink
+* @notes:         Compliment to the HTMLElement.hidden property
 */
 
 MVW.conflictGuard('shown' in HTMLElement.prototype);

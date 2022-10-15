@@ -4,10 +4,10 @@ test('map an attribute to a boolean', () => {
   var model = {value: true};
   var element = document.createElement('div');
   element.setAttribute('bind-attribute-test', 'value');
-  element.map(model);
+  element.bind(model);
   expect(element.hasAttribute('test')).toBe(true);
   model.value = false;
-  element.map(model);
+  element.bind(model);
   expect(element.hasAttribute('test')).toBe(false);
 });
 

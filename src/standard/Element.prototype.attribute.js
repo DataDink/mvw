@@ -1,9 +1,11 @@
 /**
 * @component:     Extension - Element.prototype.attribute
 * @product:       MVW - A micro extension framework
-* @author:        DataDink - https://github.com/DataDink
-* @license:       Unlicense - https://unlicense.org/
+* @dependencies:  MVW.js
 * @documentation: https://github.com/DataDink/mvw/wiki
+* @license:       Unlicense - https://unlicense.org/
+* @author:        DataDink - https://github.com/DataDink
+* @notes:         A binding-friendly alternative to Element.prototype.attributes
 */
 
 MVW.conflictGuard('attribute' in HTMLElement.prototype);
@@ -24,9 +26,9 @@ Object.defineProperty(Element.prototype, 'attribute', {
         has: (_, name) => element.hasAttribute(name),
         get: (_, name) => element.hasAttribute(name) ? element.getAttribute(name) : false,
         set: (_, name, value) => (value !== false)
-          ? element.setAttribute(name, value === true ? name : (value == null ? '' : value)) || true
+          ? element.setAttribute(name, value === true ? name : `${value}`) || true
           : element.removeAttribute(name) || true,
-        ownKeys: () => Array.from(element.attributes).map(a => a.name)
+        ownKeys: () => Array.from(element.attributes).map(a => a.localName)
       })
     )(this));
   }

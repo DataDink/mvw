@@ -1,16 +1,19 @@
 /**
 * @component:     Namespace - The MVW root namespace
 * @product:       MVW - A micro extension framework
-* @author:        DataDink - https://github.com/DataDink
-* @license:       Unlicense - https://unlicense.org/
+* @dependencies:  n/a
 * @documentation: https://github.com/DataDink/mvw/wiki
+* @license:       Unlicense - https://unlicense.org/
+* @author:        DataDink - https://github.com/DataDink
+* @notes:         The goal here is to provide disassociated coordination
+*                 across modules
 */
 
 if (typeof(MVW) !== 'undefined') { console.warn('MVW has already been loaded to this page.'); }
 
 Object.getPrototypeOf((function() { return this; })()).MVW = // Expose to global namespace
 /**
-* @class {MVW} - MVW configuration and root namespace
+* @class {MVW} - MVW settings and root namespace
 */
 Object.freeze(
   class MVW {
@@ -62,13 +65,15 @@ Object.freeze(
         * @returns {object} - An object with all of the currently registered MVW settings
         */
         static export(...overrides) {
-          return overrides.reduce((ex,or) =>
-            Object.keys(or)
-              .filter(name => name in ex)
-              .forEach(name => ex[name]=or[name])
-            &&ex||ex,
-            Object.assign({}, Settings.#reg)
-          );
+          return overrides
+            .filter(or => or != null)
+            .reduce((ex,or) =>
+              Object.keys(or)
+                .filter(name => name in ex)
+                .forEach(name => ex[name]=or[name])
+              &&ex||ex,
+              Object.assign({}, Settings.#reg)
+            );
         }
       }
     );

@@ -4,7 +4,7 @@ test('map a template to a model', () => {
   var view = document.createElement('div');
   view.innerHTML = '<template bind-template="item"><span bind-textcontent="value"></span></template>';
   var model = {item: {value: 'asdf'}};
-  view.map(model);
+  view.bind(model);
   var spans = Array.from(view.querySelectorAll('span'));
   expect(spans.length).toBe(1);
   expect(spans[0].textContent).toBe('asdf');
@@ -14,7 +14,7 @@ test('map a template to an array', () => {
   var view = document.createElement('div');
   view.innerHTML = '<template bind-template="items"><span bind-textcontent="value"></span></template>';
   var model = {items: [{value: 'a'}, {value: 'b'}, {value: 'c'}]};
-  view.map(model);
+  view.bind(model);
   var spans = Array.from(view.querySelectorAll('span'));
   expect(spans.length).toBe(3);
   expect(spans[0].textContent).toBe('a');

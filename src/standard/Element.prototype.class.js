@@ -1,9 +1,11 @@
 /**
 * @component:     Extension - Element.prototype.class
 * @product:       MVW - A micro extension framework
-* @author:        DataDink - https://github.com/DataDink
-* @license:       Unlicense - https://unlicense.org/
+* @dependencies:  MVW.js
 * @documentation: https://github.com/DataDink/mvw/wiki
+* @license:       Unlicense - https://unlicense.org/
+* @author:        DataDink - https://github.com/DataDink
+* @notes:         A binding-friendly alternative to Element.prototype.classList
 */
 
 MVW.conflictGuard('class' in HTMLElement.prototype);

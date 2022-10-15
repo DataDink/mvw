@@ -483,8 +483,8 @@
 
         #SaveKey = 'calendar-designer';
 
-        refresh() { // Saves session data and re-maps the view
-          this.#view.map(this);
+        refresh() { // Saves session data and re-binds the view
+          this.#view.bind(this);
           localStorage.setItem(this.#SaveKey, JSON.stringify({
             events: this.events,
             background: this.background,
