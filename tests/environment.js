@@ -1,4 +1,4 @@
-if (!window.MVW) {
-  Object.setPrototypeOf(EventTarget.prototype, Object.prototype); // Jest's jsdom needs this correction
-  require('../dst/debug/mvw.extended.js');
+if (Object.getPrototypeOf(EventTarget.prototype)!==Object.prototype) {
+  Object.setPrototypeOf(EventTarget.prototype, Object.prototype);
 }
+require('../dst/debug/mvw.extended.js');

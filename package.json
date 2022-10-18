@@ -1,11 +1,12 @@
 {
   "name": "mvw",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "description": "Minimalistic model-view embracing the DOM",
-  "main": "./dst/mvw.js",
+  "main": "./release/latest/mvw.extended.js",
   "scripts": {
-    "build": "node build",
-    "test": "node build\njest"
+    "build": "node build.mjs",
+    "test": "node build.mjs\njest",
+    "release": "node release.mjs"
   },
   "jest": {
     "testEnvironment": "jsdom",
@@ -30,8 +31,8 @@
     "library",
     "framework"
   ],
-  "author": "DataDink",
-  "license": "Unlicense",
+  "author": "DataDink - https://github.com/DataDink",
+  "license": "Unlicense - https://unlicense.org/",
   "devDependencies": {
     "fake-indexeddb": "^4.0.0",
     "jest": "^27.5.1",

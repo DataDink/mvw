@@ -1,6 +1,19 @@
 require('../environment.js');
-Object.defineProperty(HTMLElement.prototype, 'scrollWidth', {writable: true, value: 0});
-Object.defineProperty(HTMLElement.prototype, 'scrollHeight', {writable: true, value: 0});
+const restore = {
+  scrollWidth: Object.getOwnPropertyDescriptor(Element.prototype, 'scrollWidth'),
+  scrollHeight: Object.getOwnPropertyDescriptor(Element.prototype, 'scrollHeight')
+};
+
+beforeAll(() => {
+  Object.keys(restore).forEach(name =>
+    Object.defineProperty(Element.prototype, name, {writable: true, value: 0})
+  )
+});
+afterAll(() => {
+  Object.keys(restore).forEach(name =>
+    Object.defineProperty(Element.prototype, name, restore[name])
+  )
+});
 
 test('init without attribute', async () => {
   var element = document.createElement('input');
@@ -32,6 +45,7 @@ test('add attribute', async () => {
   expect(element.style.width).toBe('');
   expect(element.style.height).toBe('');
   element.setAttribute('autosize', 'autosize');
+  element.dispatchEvent(new CustomEvent('input'));
   await new Promise(r => setTimeout(r, 1));
   expect(element.style.width).toBe('100px');
   expect(element.style.height).toBe('200px');
