@@ -10,7 +10,7 @@ Model-View-Web
 **Goal:** Bridge Application & Presentation, unobtrusively & declaratively,
 without deviating from or hiding existing web strategies & patterns.
 
-**Result:** Extension to the DOM Node with a `.map(model)` function that enables
+**Result:** Extension to the DOM Node with a `.bind(model)` function that enables
 declarative, attribute-driven mapping/binding between elements and models.
 
 **Pros:**
@@ -19,7 +19,7 @@ declarative, attribute-driven mapping/binding between elements and models.
 * Declarative
 * Unopinionated
 * Customizable
-* Embraces/targets existing web practices
+* Embraces/targets existing web patterns
 * Targets light projects (no overhead, quick startup)
 
 **Cons:**
@@ -32,7 +32,7 @@ declarative, attribute-driven mapping/binding between elements and models.
 *The only real missing piece to the DOM is a good method for declaratively binding it to a model*
 <img src="Problem.jpg" style="width: 50%;" />
 
-*This came out unintentionally similar to vue, but differs in that it tries to keep/continue with existing web patterns and leverages prototype extensions*
+*Note: This came out unintentionally similar to vue, but differs in that it tries to keep/continue with existing web patterns and leverages prototype extensions*
 
 # Examples
 ## Basics
@@ -40,7 +40,7 @@ declarative, attribute-driven mapping/binding between elements and models.
 
 **View**
 ```xml
-<span data-textContent="value"></span><!-- equiv to span.textContent = model.value -->
+<span bind-textContent="value"></span><!-- equiv to span.textContent = model.value -->
 ```
 **Model**
 ```javascript
@@ -50,11 +50,11 @@ var model = {
 ```
 **Bootstrap**
 ```javascript
-document.body.map(model);
+document.body.bind(model);
 ```
 **Result**
 ```xml
-<span data-textContent="value">Some text for content</span>
+<span bind-textContent="value">Some text for content</span>
 ```
 
 ## Handling Clicks
@@ -62,7 +62,7 @@ document.body.map(model);
 
 **View**
 ```xml
-<div data-onclick="handler(textContent)">click me</div><!-- equiv to div.onclick = model.handler -->
+<div bind-onclick="handler(textContent)">click me</div><!-- equiv to div.onclick = model.handler -->
 ```
 **Model**
 ```javascript
@@ -72,7 +72,7 @@ var model = {
 ```
 **Bootstrap**
 ```javascript
-document.body.map(model);
+document.body.bind(model);
 ```
 
 ## Refreshing the DOM after an update to the model
@@ -80,8 +80,8 @@ document.body.map(model);
 
 **View**
 ```xml
-<span data-textContent="value"></span>
-<button data-onclick="increment">Increment</button>
+<span bind-textContent="value"></span>
+<button bind-onclick="increment">Increment</button>
 ```
 **Model**
 ```javascript
@@ -94,7 +94,7 @@ class Application {
   }
   refresh() {
     // re-mapping will apply changes on the model to the DOM
-    this.#view.map(this);
+    this.#view.bind(this);
   }
   constructor(view) {
     this.#view = view;
@@ -112,8 +112,8 @@ new Application(document.body);
 
 **View**
 ```xml
-<div data-class-active="value1"></div>
-<div data-class-active="value2"></div>
+<div bind-class-active="value1"></div>
+<div bind-class-active="value2"></div>
 ```
 **Model**
 ```javascript
@@ -124,12 +124,12 @@ var model = {
 ```
 **Bootstrap**
 ```javascript
-document.body.map(model);
+document.body.bind(model);
 ```
 **Result**
 ```xml
-<div class="active" data-class-active="value1"></div>
-<div data-class-active="value2"></div>
+<div class="active" bind-class-active="value1"></div>
+<div bind-class-active="value2"></div>
 ```
 
 ## Mapping an attribute on an element to a boolean on a model
@@ -137,8 +137,8 @@ document.body.map(model);
 
 **View**
 ```xml
-<input type="text" data-attribute-disabled="value1" />
-<input type="text" data-attribute-disabled="value2" />
+<input type="text" bind-attribute-disabled="value1" />
+<input type="text" bind-attribute-disabled="value2" />
 ```
 **Model**
 ```javascript
@@ -149,12 +149,12 @@ var model = {
 ```
 **Bootstrap**
 ```javascript
-document.body.map(model);
+document.body.bind(model);
 ```
 **Result**
 ```xml
-<input type="text" disabled="disabled" data-attribute-disabled="value1" />
-<input type="text" data-attribute-disabled="value2" />
+<input type="text" disabled="disabled" bind-attribute-disabled="value1" />
+<input type="text" bind-attribute-disabled="value2" />
 ```
 
 ## Mapping a template to an array of data
@@ -163,8 +163,8 @@ document.body.map(model);
 **View**
 ```xml
 <ul>
-  <template data-template="value">
-    <li data-textContent="text"></li>
+  <template bind-template="value">
+    <li bind-textContent="text"></li>
   </template>
 </ul>
 ```
@@ -180,17 +180,17 @@ var model = {
 ```
 **Bootstrap**
 ```javascript
-document.body.map(model);
+document.body.bind(model);
 ```
 **Result**
 ```xml
 <ul>
-  <template data-template="value">
-    <li data-textContent="text"></li>
+  <template bind-template="value">
+    <li bind-textContent="text"></li>
   </template>
-  <li data-textContent="text">First Item</li>
-  <li data-textContent="text">Second Item</li>
-  <li data-textContent="text">Third Item</li>
+  <li bind-textContent="text">First Item</li>
+  <li bind-textContent="text">Second Item</li>
+  <li bind-textContent="text">Third Item</li>
 </ul>
 ```
 
@@ -199,7 +199,7 @@ document.body.map(model);
 
 **View**
 ```xml
-<form data-onsubmit="submit">
+<form bind-onsubmit="submit">
   <input name="title" type="text" />
   <input name="description" type="text" />
   <button type="submit">Submit</button>
@@ -218,10 +218,33 @@ var model = {
 ```
 **Bootstrap**
 ```javascript
-document.body.map(model);
+document.body.bind(model);
 ```
 
 # Version Notes
+* 1.2.2
+  * Simplification
+    * This project was begining to complicate and this pass attempted to get back to being an *extension* library.
+    * Reduced global pollution: Helper classes (e.g. MemberQuery, Node.Scope) have been replaced with simpler helper extension functions with better testability (e.g. Object.prototype.memberSelector).
+    * MVW namespace added for disassociated coordination between modules. MVW.Settings offers a shared default & overridable configuration core.
+    * Reduced inter-dependencies across the library
+    * Dropped low-value parsing extensions
+  * Coverage
+    * Hundreds of unit tests added
+    * Code adjusted for testability
+  * New Stuff
+    * Added console formatter extensions that were being used in build scripts to the extended package
+    * Added EventSource.prototype.promise extension for simplifying conversion of event-based async patterns to promises for compat with async/await
+  * Breaking Changes
+    * Default attribute prefix changed from 'data-' to 'bind-'
+    * Node.prototype.map changed to Node.prototype.bind
+    * Helper classes (e.g. MemberQuery, Node.Scope, etc) replaced/simplified with helper functions (e.g. Object.prototype.memberSelector.select)
+    * New release/build schemes breaks references directly from the github web deploy
+    * Removed Object.deserialize
+    * Removed Object.serialize
+    * Removed String.prototype.scan
+    * Removed Promise.queue
+    * Removed Object.override
 * 1.2.1
   * Hotfixes
     * Fix to HTMLTemplateElement.prototype.template that was causing elements to be reversed.
