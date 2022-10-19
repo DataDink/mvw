@@ -222,7 +222,7 @@ document.body.bind(model);
 ```
 
 # Version Notes
-* 1.2.2
+* 1.3.0
   * Simplification
     * This project was begining to complicate and this pass attempted to get back to being an *extension* library.
     * Reduced global pollution: Helper classes (e.g. MemberQuery, Node.Scope) have been replaced with simpler helper extension functions with better testability (e.g. Object.prototype.memberSelector).
