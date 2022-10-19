@@ -74,6 +74,10 @@
 >
 > *Note: This came out unintentionally similar to vue, but differs in that it tries to keep/continue with existing web patterns and targets prototype extensions*
 
+## Samples
+
+> * [Calendar Designer](https://datadink.github.io/mvw/samples/CalendarDesigner.html) - Used by my local pub to print out their event calendars
+
 ## Quick Start
 
 > **Sample Application**
