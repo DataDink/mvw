@@ -1,8 +1,9 @@
-import * as fs from 'fs';
-import path from 'path';
+import * as FS from 'fs';
+import Path from 'path';
 import './src/extended/console-formatters.js';
 import './src/extended/String.prototype.wrap.js';
-const Package = JSON.parse(fs.readFileSync('./package.json').toString());
+const Package = JSON.parse(FS.readFileSync('./package.json').toString());
+FS.writeFileSync('./package.json', JSON.stringify(Package, null, 3));
 
 export const settings = {
   package: Package,
@@ -50,12 +51,12 @@ export const settings = {
     }
   }],
   headerItems: [
-    {name: 'product', formatter: file => `      ${Package.name} v${Package.version} - ${Package.description}`},
-    {name: 'component', formatter: file => `    ${path.parse(file).name}`},
-    {name: 'license', formatter: file => `      ${Package.license}`},
-    {name: 'documentation', formatter: file => `https://github.com/DataDink/mvw/wiki/${path.parse(file).name}`},
-    {name: 'source', formatter: file => `       https://github.com/DataDink/mvw/${path.join('.', file)}`},
-    {name: 'author', formatter: file => `       ${Package.author}`}
+    {name: 'product', formatter: path => `      ${Package.name} v${Package.version} - ${Package.description}`},
+    {name: 'component', formatter: path => `    ${Path.parse(path).name}`},
+    {name: 'license', formatter: path => `      ${Package.license}`},
+    {name: 'documentation', formatter: path => `https://github.com/DataDink/mvw/wiki/${Path.parse(path).name}`},
+    {name: 'source', formatter: path => `       https://github.com/DataDink/mvw/${Path.join('.', path)}`},
+    {name: 'author', formatter: path => `       ${Package.author}`}
   ],
   headerWidth: 100,
   headerPrefix: '* @',
@@ -84,5 +85,31 @@ export const settings = {
       ')', // The desc terminator group
     ')?', // The delim/desc group making the whole group optional
   ].join(''), 'gims'),
+  importCode: async function importCode(path) {
+    var content = await FS.promises.readFile(path, 'utf-8');
+    var header = (content.match(settings.headerParser)||[])[0]||'';
+    var items = settings.headerItems
+      .map(item=>{return{ name: item.name, desc: item.formatter(path) };})
+      .concat(
+        Array.from(header.matchAll(settings.headerItemParser))
+          .map(m=>{return{ name: m.groups.name, desc: (m.groups.desc||'').replace(/\n[\s\*]*/,' ')};})
+      )
+      .reduce((cat,item) =>
+        (name => !(name in cat)&&(cat[name]=item.desc)&&cat||cat)
+        (Object.keys(cat).find(k => k.toLowerCase()===item.name.toLowerCase())||item.name),
+        {}
+      );
+    var column = Math.max(...Object.keys(items).map(i => i.length));
+    return `/**\n${
+      Object.keys(items).map(name =>
+        `${settings.headerPrefix}${name}${settings.headerDelim}${' '.repeat(column-name.length)}`
+        + items[name]
+          .wrap(settings.headerWidth-(settings.headerPrefix.length+column+settings.headerDelim.length))
+          .split('\n')
+          .join('\n*'+' '.repeat(settings.headerPrefix.length+column+settings.headerDelim.length-1))
+      ).join('\n')
+    }\n*/\n\n${content.replace(settings.headerParser, '').trim()}`;
+  },
   printBorder: () => console.log.write('\n').blink.black.yellowHighlight.write('*'.repeat(process.stdout.columns)).reset('\n'),
+  clearTerminal: () => process.stdout.write('\u001b[H\u001b[2J\u001b[3J'),
 }
