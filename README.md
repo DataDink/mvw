@@ -1,296 +1,196 @@
-# mvw
- *minimalistic model-view embracing the DOM*
+# mvw (model-view-web)
 
-Model-View-Web
+*A micro extension library for rapid development of simple and limited-scope web-based applications and tooling*
 
-[Documentation](https://github.com/DataDink/mvw/wiki)
+## The Docs
 
-[Samples](https://datadink.github.io/mvw/)
+* Source: [https://github.com/DataDink/mvw](https://github.com/DataDink/mvw)
+* Notes: [https://github.com/DataDink/mvw/wiki/Version-Notes](https://github.com/DataDink/mvw/wiki/Version-Notes)
+* API: [https://github.com/DataDink/mvw/wiki/Documentation](https://github.com/DataDink/mvw/wiki/documentation)
 
-**Goal:** Bridge Application & Presentation, unobtrusively & declaratively,
-without deviating from or hiding existing web strategies & patterns.
+## The Basics
 
-**Result:** Extension to the DOM Node with a `.map(model)` function that enables
-declarative, attribute-driven mapping/binding between elements and models.
+> **The steps are few:**
+>
+> * **Decorate** the view with `bind-` attributes
+> ```html
+> <html>
+>   <head>
+>     <script src="mvw.js"></script>
+>   </head>
+>   <body>
+>
+>     <!-- binds the span's `textContent` property to the model's `strings.title` value -->
+>     <span bind-textContent="strings.title"></span>
+>
+>   </body>
+> </html>
+> ```
+> * **Bind** the document with the `.bind` extension, passing a model
+> ```js
+> // The model can be most any object
+> let model = {
+>   strings: {
+>     title: 'The sample title',
+>     description: 'A sample description'
+>   }
+> }
+>
+> // document is an ancestor of the element and can be used as the binding point
+> document.bind(model);
+> ```
+> * **ReBind** to apply changes made to the model
+> ```js
+> model.strings.title = 'The title has been changed';
+> document.bind(model);
+> ```
 
-**Pros:**
-* Tiny
-* Clean
-* Declarative
-* Unopinionated
-* Customizable
-* Embraces/targets existing web practices
-* Targets light projects (no overhead, quick startup)
+## The Idea
 
-**Cons:**
-* Performance: Untested -> Enough for lightweight projects
-* Support: Maybe, this was an experiment. Feel free to make pull requests.
-* Breaking Changes: This project is currently young and undergoing breaking changes while core functionality is being flushed out.
+> **Goal:**
+> * Bridge **Application** & **Presentation**, unobtrusively and declaratively, without deviating from existing web *strategies* and *patterns*
+>
+> **Result:**
+> * A micro, tiered, extension library with a light-weight, one-way binding function to connect model/view via declarative, attribute-driven view decoration.
+>
+> **Pros:**
+> * Tiny
+> * Clean
+> * Declarative
+> * Unopinionated
+> * Customizable
+> * Embraces/targets existing web patterns
+> * Targets light projects (no overhead, quick startup)
+>
+> **Cons:**
+> * Performance: Untested -> Enough for lightweight projects
+> * Support: Maybe. This is an experiment. Feel free to make pull requests.
+> * Breaking Changes: This project is currently young and undergoing breaking changes while core functionality is being flushed out.
+>
+> **Problem Being Solved:**
+>
+> *The only real missing piece to the DOM is a good method for declaratively binding it to a model*
+> <img src="Problem.jpg" style="width: 50%;" />
+>
+> *Note: This came out unintentionally similar to vue, but differs in that it tries to keep/continue with existing web patterns and targets prototype extensions*
 
-**Problem Being Solved:**
+## Samples
 
-*The only real missing piece to the DOM is a good method for declaratively binding it to a model*
-<img src="Problem.jpg" style="width: 50%;" />
+> * [Calendar Designer](https://datadink.github.io/mvw/samples/CalendarDesigner.html) - Used by my local pub to print out their event calendars
 
-*This came out unintentionally similar to vue, but differs in that it tries to keep/continue with existing web patterns and leverages prototype extensions*
+## Quick Start
 
-# Examples
-## Basics
-*Maps `model.value` to the span's `textContent` property*
-
-**View**
-```xml
-<span data-textContent="value"></span><!-- equiv to span.textContent = model.value -->
-```
-**Model**
-```javascript
-var model = {
-  value: 'Some text for content'
-}
-```
-**Bootstrap**
-```javascript
-document.body.map(model);
-```
-**Result**
-```xml
-<span data-textContent="value">Some text for content</span>
-```
-
-## Handling Clicks
-*Maps `model.handler` to the div's `onclick` property*
-
-**View**
-```xml
-<div data-onclick="handler(textContent)">click me</div><!-- equiv to div.onclick = model.handler -->
-```
-**Model**
-```javascript
-var model = {
-  handler: value => alert(value)
-}
-```
-**Bootstrap**
-```javascript
-document.body.map(model);
-```
-
-## Refreshing the DOM after an update to the model
-*A button that updates a value in a span*
-
-**View**
-```xml
-<span data-textContent="value"></span>
-<button data-onclick="increment">Increment</button>
-```
-**Model**
-```javascript
-class Application {
-  #view;
-  value = 0;
-  increment() {
-    this.value++;
-    this.refresh();
-  }
-  refresh() {
-    // re-mapping will apply changes on the model to the DOM
-    this.#view.map(this);
-  }
-  constructor(view) {
-    this.#view = view;
-    this.refresh();
-  }
-}
-```
-**Bootstrap**
-```javascript
-new Application(document.body);
-```
-
-## Mapping a class on an element to a boolean on a model
-*The `model.value1` and `model.value2` values will determine if the divs have the `active` class or not*
-
-**View**
-```xml
-<div data-class-active="value1"></div>
-<div data-class-active="value2"></div>
-```
-**Model**
-```javascript
-var model = {
-  value1: true,
-  value2: false
-};
-```
-**Bootstrap**
-```javascript
-document.body.map(model);
-```
-**Result**
-```xml
-<div class="active" data-class-active="value1"></div>
-<div data-class-active="value2"></div>
-```
-
-## Mapping an attribute on an element to a boolean on a model
-*The `model.value1` and `model.value2` values will determine if the inputs have the `disabled` attribute or not*
-
-**View**
-```xml
-<input type="text" data-attribute-disabled="value1" />
-<input type="text" data-attribute-disabled="value2" />
-```
-**Model**
-```javascript
-var model = {
-  value1: true,
-  value2: false
-};
-```
-**Bootstrap**
-```javascript
-document.body.map(model);
-```
-**Result**
-```xml
-<input type="text" disabled="disabled" data-attribute-disabled="value1" />
-<input type="text" data-attribute-disabled="value2" />
-```
-
-## Mapping a template to an array of data
-*The template will populate to the DOM based on the items at `model.value`*
-
-**View**
-```xml
-<ul>
-  <template data-template="value">
-    <li data-textContent="text"></li>
-  </template>
-</ul>
-```
-**Model**
-```javascript
-var model = {
-  value: [
-    {text: 'First Item'},
-    {text: 'Second Item'},
-    {text: 'Third Item'}
-  ]
-}
-```
-**Bootstrap**
-```javascript
-document.body.map(model);
-```
-**Result**
-```xml
-<ul>
-  <template data-template="value">
-    <li data-textContent="text"></li>
-  </template>
-  <li data-textContent="text">First Item</li>
-  <li data-textContent="text">Second Item</li>
-  <li data-textContent="text">Third Item</li>
-</ul>
-```
-
-## Getting input from the user
-*Using `FormData` to grab input from a form on submit*
-
-**View**
-```xml
-<form data-onsubmit="submit">
-  <input name="title" type="text" />
-  <input name="description" type="text" />
-  <button type="submit">Submit</button>
-</form>
-```
-**Model**
-```javascript
-var model = {
-  submit = e => {
-    e.preventDefault();
-    var data = new FormData(e.target);
-    console.log(data.get('title'));
-    console.log(data.get('description'));
-  }
-}
-```
-**Bootstrap**
-```javascript
-document.body.map(model);
-```
-
-# Version Notes
-* 1.2.1
-  * Hotfixes
-    * Fix to HTMLTemplateElement.prototype.template that was causing elements to be reversed.
-* 1.2
-  * Added
-    * mvw.core
-      * String.scanUntil & String.scanWhile
-        * Consolidated common parsing utility functions
-      * Object.override
-        * Consolidated common mapping utility function
-    * mvw.standard
-      * HTMLElement.prototype.shown
-        * Compliments HTMLElement.prototype.hidden
-    * mvw.extended
-      * Object.serialize & Object.deserialize
-        * JSON-esque
-        * type/class resolution
-        * instance referencing
-      * HTMLInputElement.prototype.autosize
-        * Enables auto resizing on a text control
-      * Promise.queue
-        * Compliments Promise.all, Promise.race
-        * Similar to Array.prototype.reduce
-        * Redundant of using await in loops
-  * Optimizations
-    * HTMLTemplateElement.prototype.template
-    * Node.prototype.map
-    * Element.prototype.attribute
-    * Element.prototype.class
-  * Cleanup items
-    * Updated build to support multiple builds: core, standard, extras
-    * Renamed folder structure to match builds
-  * Breaking Changes
-    * Conforming Element.prototype.attribute extension to remove only on a false value
-      * Previously included null/undefined
-      * This change enables <element data-attribute /> style activation of attributes
-* 1.1
-  * Preformance Pass
-    * Increased performance at the expense of a bump to caching on elements
-    * Switched some RegExp to quicker, manual parsing
-  * Support for parameter selectors
-    * Selectors can now have parameter statements to define values passed to handlers
-    * Example: `<input name="field" data-onclick="member1.member2(name, value, value.length)">`
-  * Added configurability
-    * attributePrefix: ('data-') The prefix used to identify mapping attributes
-    * attributeDelimiter: ('-') The character used for separating properties in an attribute name
-    * memberDelimiter: ('.') The character used for separating properties in a selector
-    * selectorDelimiter: ('(') The opening character for parameter queries
-    * parameterDelimiter: (',') The character used for separating parameter queries
-    * selectorTerminator: (')') The character used marking the end of parameter queries
-    * Example: `document.body.map(model, {attributePrefix: 'map-'})`
-  * Breaking changes to ObjectQuery
-    * Renamed to MemberQuery
-    * Now creates a compiled selector that can be re-evaluated (vs single evaluation)
-  * Breaking change to HTMLTemplateElement.prototype.template
-    * Reading the template in js now returns the data rather than a content clone.
-* 1.0.1
-  * Improved naming
-    * HTMLElement.prototype.classes -> Element.prototype.class
-      * Changed to match the non-plural name change of settings to attribute
-      * Less likely to become a future conflict (see (Element.prototype.className)[https://developer.mozilla.org/en-US/docs/Web/API/Element/className])
-    * HTMLElement.prototype.settings -> Element.prototype.attribute
-      * Changed to better reflect the extensions purpose.
-* 1.0.0
-  * Hello World
-  * Extensions
-    * Node.prototype.map
-    * HTMLElement.prototype.classes
-    * HTMLElement.prototype.settings
-    * HTMLTemplateElement.prototype.template
-  * Unit Tests: Yep
-  * Performance Tests: Nope
+> **Sample Application**
+>
+> *A tiny application that adds template content to the page when a button is clicked*
+>
+> ```html
+> <!DOCTYPE html>
+> <html>
+>   <head> <!-- mvw has different tiers for different needs. -->
+>     <!--<script src="https://datadink.github.io/mvw/release/latest/mvw.minimal.min.js"></script>-->
+>     <script src="https://datadink.github.io/mvw/release/latest/mvw.standard.min.js"></script>
+>     <!--<script src="https://datadink.github.io/mvw/release/latest/mvw.extended.min.js"></script>-->
+>   </head>
+>   <body>
+>     <header>
+>
+>       <!-- Binds `<h1>.textContent` to `model.strings.title` -->
+>       <h1 bind-textContent="strings.title"></h1>
+>
+>     </header>
+>     <main>
+>
+>       <!-- Binds the template to the `model.items` array -->
+>       <template bind-template="items">
+>
+>         <!-- Binds the `<button>.onclick` event to the `item.removeItem` function -->
+>         <!-- When clicked, the `item.removeItem` function will be passed
+>              the button's `textContent` and its parent node's `tagName` -->
+>         <button bind-onclick="removeItem(textContent, parentNode.tagName)">
+>           Remove Item
+>         </button>
+>
+>         <div>
+>
+>           <!-- Binds `<span>.textContent` to `item.time.created` -->
+>           <p>This item was created at <span bind-textContent="time.created"></span></p>
+>
+>           <!-- Binds `<span>.textContent` to `item.time.added` -->
+>           <p>This item was added at <span bind-textContent="time.added"></span></p>
+>         </div>
+>
+>       </template>
+>
+>       <!-- Binds the `<button>.onclick` event to the `model.addItem` -->
+>       <!-- When clicked, the `model.addItem` function will be passed the `ClickEvent` info -->
+>       <button bind-onclick="addItem">Add Item</button>
+>     </main>
+>     <script>
+>
+>       /** @class {Application} - A simple application that binds a model when .publish is called */
+>       class Application {
+>
+>         /** @property {function} publish - called when the model has changes */
+>         publish;
+>
+>         /** @property {object} model - the application model that is published to the view */
+>         model = { // Gets bound to document.body
+>           strings: {
+>             title: 'Sample Page', // Gets bound to html/body/header/h1.textContent
+>             descriptions: '...'
+>           },
+>           items: [], // Gets bound to html/body/main/template
+>           addItem: null // Gets bound to html/body/main/button.onclick
+>         };
+>
+>         /** @property {function} addItem - call to add an item to the model */
+>         addItem(buttonText) {
+>           console.log(`${buttonText} clicked: removing from ${parent}`);
+>           var item = new Item(this);
+>           setTimeout(() => {
+>             item.time.added = Date.now();
+>             this.model.items.push(item);
+>             this.publish();
+>           },1000);
+>         };
+>
+>         /** @constructor {Application} - configures the Application and its model */
+>         constructor(publish) {
+>           this.publish = () => publish(this.model);
+>           this.model.addItem = e => this.addItem(e.target.textContent);
+>           this.publish();
+>         }
+>       }
+>
+>       /** @class {Item} - created by the Application.prototype.addItem function */
+>       class Item {
+>
+>         /** @property {Application} app - reference to the owner application */
+>         app;
+>
+>         /** @property {string} time - some time stamps */
+>         time = {
+>           created: Date.now(), // Gets bound to html/body/main/template/span.textContent
+>           added: null, // Gets bound to html/body/main/template/span.textContent
+>         };
+>
+>         /** @property {function} removeItem - removes the item from its owner Application */
+>         removeItem(buttonText, parentTag) { // Gets bound to html/body/main/template/button.onclick
+>           console.log(`${buttonText} clicked: removing from ${parentTag}`);
+>           let index = this.app.model.items.indexOf(this);
+>           this.app.model.items.splice(index, 1);
+>           this.app.publish();
+>         }
+>
+>         /** @constructor {Item} - configures the Item with reference to the owner Application */
+>         constructor(app) { this.app = app; }
+>       }
+>
+>       /** @const {Application} App - an instance of Application configured to bind to document.body */
+>       const App = new Application(model => document.body.bind(model));
+>
+>     </script>
+>   </body>
+> </html>
+> ```

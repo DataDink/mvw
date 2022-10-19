@@ -1,6 +1,6 @@
-<html ondragover="event.preventDefault()" data-ondrop="setBackgroundImage">
+<html ondragover="event.preventDefault()" bind-ondrop="setBackgroundImage">
   <head>
-    <script src="../release/mvw.standard.js"></script>
+    <script src="../release/latest/mvw.standard.js"></script>
     <style id="css-fonts">
       @import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative&family=League+Gothic:wdth@90&family=Lexend+Peta&family=Roboto+Condensed:wght@300&display=swap');
       html { /* Light stroke on text to ensure it can be seen on any background */
@@ -266,7 +266,7 @@
       }
     </style>
     <style id="css-application">
-      [data-onclick] {
+      [bind-onclick] {
         cursor: pointer;
         user-select: none;
       }
@@ -279,22 +279,22 @@
       }
     </style>
   </head>
-  <body data-class-leapyear="year.leapyear" data-style-backgroundImage="background">
+  <body bind-class-leapyear="year.leapyear" bind-style-backgroundImage="background">
     <header>
       <div class="no-print">
-        <span data-onclick="setBackgroundUrl">drop an image or click here to set background</span>
+        <span bind-onclick="setBackgroundUrl">drop an image or click here to set background</span>
         <!--
           •
-          <span data-onclick="resetCache">click here to reset everything</span>
+          <span bind-onclick="resetCache">click here to reset everything</span>
         -->
       </div>
       <h1>
-        <button class="huge" data-onclick="year.previous">&lt;&lt;</button>
-        <button class="huge" data-onclick="month.previous">&lt;</button>
-        <span data-textContent="month.name" data-onclick="resetDate"></span>
-        <span data-textContent="year.index" data-onclick="resetDate"></span>
-        <button class="huge" data-onclick="month.next">&gt;</button>
-        <button class="huge" data-onclick="year.next">&gt;&gt;</button>
+        <button class="huge" bind-onclick="year.previous">&lt;&lt;</button>
+        <button class="huge" bind-onclick="month.previous">&lt;</button>
+        <span bind-textContent="month.name" bind-onclick="resetDate"></span>
+        <span bind-textContent="year.index" bind-onclick="resetDate"></span>
+        <button class="huge" bind-onclick="month.next">&gt;</button>
+        <button class="huge" bind-onclick="year.next">&gt;&gt;</button>
       </h1>
     </header>
     <main>
@@ -307,21 +307,21 @@
         <li class="weekday">Fri</li>
         <li class="weekday">Sat</li>
       </ul>
-      <template data-template="calendar.weeks">
+      <template bind-template="calendar.weeks">
         <ul class="week">
-          <template data-template="days">
-            <li class="day" data-attribute-disabled="inactive">
+          <template bind-template="days">
+            <li class="day" bind-attribute-disabled="inactive">
               <aside class="date">
-                <span data-textContent="date"></span>
-                <button class="tiny safe" data-onclick="createEvent">+</button>
+                <span bind-textContent="date"></span>
+                <button class="tiny safe" bind-onclick="createEvent">+</button>
               </aside>
               <ul class="events">
-                <template data-template="events">
+                <template bind-template="events">
                   <li class="event">
-                    <button class="tiny danger" data-onclick="delete">x</button>
-                    <span class="description" data-textContent="text" data-onclick="edit"></span>
-                    <div class="time" data-onclick="edit">
-                      <span data-textContent="begin"></span>-<span data-textContent="end"></span>
+                    <button class="tiny danger" bind-onclick="delete">x</button>
+                    <span class="description" bind-textContent="text" bind-onclick="edit"></span>
+                    <div class="time" bind-onclick="edit">
+                      <span bind-textContent="begin"></span>-<span bind-textContent="end"></span>
                     </div>
                   </li>
                 </template>
@@ -331,46 +331,46 @@
         </ul>
       </template>
     </main>
-    <footer data-textContent="footer" data-onclick="setFooter"></footer>
-    <template data-template="eventDialog">
-      <form data-onsubmit="submit">
+    <footer bind-textContent="footer" bind-onclick="setFooter"></footer>
+    <template bind-template="eventDialog">
+      <form bind-onsubmit="submit">
         <header><h4>Edit Event</h4></header>
         <label>
           <span>Begins:</span>
-          <select name="begin" data-value="data.begin">
-            <template data-template="data.beginTimes">
-              <option data-textContent="value" data-attribute-selected="active"></option>
+          <select name="begin" bind-value="data.begin">
+            <template bind-template="data.beginTimes">
+              <option bind-textContent="value" bind-attribute-selected="active"></option>
             </template>
           </select>
         </label>
         <label>
           <span>Ends:</span>
-          <select name="end" data-value="data.end">
-            <template data-template="data.endTimes">
-              <option data-textContent="value" data-attribute-selected="active"></option>
+          <select name="end" bind-value="data.end">
+            <template bind-template="data.endTimes">
+              <option bind-textContent="value" bind-attribute-selected="active"></option>
             </template>
           </select>
         </label>
         <label>
           <span>Text:</span>
-          <input name="text" type="text" data-value="data.text" />
+          <input name="text" type="text" bind-value="data.text" />
         </label>
         <menu>
           <button type="submit" class="safe">Save</button>
-          <button type="button" class="neutral" data-onclick="cancel">Cancel</button>
+          <button type="button" class="neutral" bind-onclick="cancel">Cancel</button>
         </menu>
       </form>
     </template>
-    <template data-template="inputDialog">
-      <form data-onsubmit="submit">
-        <header><h4 data-textContent="data.title"></h4></header>
+    <template bind-template="inputDialog">
+      <form bind-onsubmit="submit">
+        <header><h4 bind-textContent="data.title"></h4></header>
         <label>
           <span>Text:</span>
-          <input type="text" name="value" data-value="data.value" />
+          <input type="text" name="value" bind-value="data.value" />
         </label>
         <menu>
           <button type="submit" class="safe">Update</button>
-          <button type="button" class="neutral" data-onclick="cancel">Cancel</button>
+          <button type="button" class="neutral" bind-onclick="cancel">Cancel</button>
         </menu>
       </form>
     </template>
@@ -483,8 +483,8 @@
 
         #SaveKey = 'calendar-designer';
 
-        refresh() { // Saves session data and re-maps the view
-          this.#view.map(this);
+        refresh() { // Saves session data and re-binds the view
+          this.#view.bind(this);
           localStorage.setItem(this.#SaveKey, JSON.stringify({
             events: this.events,
             background: this.background,

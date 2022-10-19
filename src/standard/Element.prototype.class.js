@@ -1,10 +1,16 @@
-(() => {
+/**
+* @dependencies:  n/a
+* @license:       Unlicense - https://unlicense.org/
+* @author:        DataDink - https://github.com/DataDink
+* @notes:         A binding-friendly alternative to Element.prototype.classList
+*/
+
+((ExtensionPoint, ExtensionName, Index) => {
+  if (ExtensionName in ExtensionPoint) { return; }
+
   /**
-  * The index for caching to the node
-  * @constant {Symbol} Index
+  * @member {Proxy} class - Wrapper object converting the Element.classList array into true/false member assignment
   */
-  let Index = Symbol('class');
-  /** @member {Proxy} class - Wrapper object converting the Element.classList array into true/false member assignment */
   Object.defineProperty(Element.prototype, 'class', {
     configurable: false, enumerable: true,
     get: function() {
@@ -18,4 +24,8 @@
       )(this));
     }
   });
-})();
+})(
+  /** @ExtensionPoint */ Element.prototype,
+  /** @ExtensionName  */ 'class',
+  /** @Index          */ Symbol('class')
+);

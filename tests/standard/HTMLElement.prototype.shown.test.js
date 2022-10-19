@@ -1,4 +1,4 @@
-require('../../dst/mvw.standard.js');
+require('../environment.js');
 
 test('gets !hidden', () => {
   var element = document.createElement('div');
