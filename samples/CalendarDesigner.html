@@ -546,7 +546,6 @@
           this.#app.refresh();
         }
         previous() { // decrements the month
-          console.log(this);
           var date = new Date(this.#app.year.index, this.index - 1, 1);
           this.#app.year.index = date.getFullYear();
           this.index = date.getMonth();
