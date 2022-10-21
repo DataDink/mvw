@@ -11,7 +11,7 @@
   /**
   * @member {Proxy} class - Wrapper object converting the Element.classList array into true/false member assignment
   */
-  Object.defineProperty(Element.prototype, 'class', {
+  Object.defineProperty(ExtensionPoint, ExtensionName, {
     configurable: false, enumerable: true,
     get: function() {
       return this[Index] || (this[Index] = ((element) =>

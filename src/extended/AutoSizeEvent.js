@@ -7,7 +7,7 @@
 */
 
 ((ExtensionPoint, ExtensionName, AttrName, EvtName, Triggers) => {
-  Object.defineProperty(ExtensionPoint, 'AutoSizeEvent', {
+  Object.defineProperty(ExtensionPoint, ExtensionName, {
     enumerable: true, configurable: false, writable: false,
     value: Object.freeze(
       /**

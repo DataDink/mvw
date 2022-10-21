@@ -1,7 +1,8 @@
 import { promises as FS } from 'fs';
 import * as Path from 'path';
 import AdmZip from 'adm-zip';
-import {settings as Settings} from './settings.mjs';
+import {Settings} from './settings.mjs';
+import {Formatters} from './build-formatters.mjs';
 
 Promise.resolve()
   .then(() => Settings.clearTerminal())
@@ -53,8 +54,8 @@ async function zip() {
     while (sources.length) {
       var source = sources.shift();
       if ((await FS.lstat(source)).isFile()) {
-        var code = await Settings.importCode(source);
         console.log.light(`\t${source}`);
+        var code = Formatters.formatModule(await FS.readFile(source, 'utf8'));
         build.addFile(source, Buffer.from(code, 'utf-8'));
       } else {
         sources.push(
