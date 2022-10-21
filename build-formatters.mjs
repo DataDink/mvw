@@ -74,7 +74,7 @@ export const Formatters = {
   },{ // Creates build-global versions of select global values to support minification
     name: 'globals',
     format: (path, content) =>
-      'const MVWGLOBALROOTMEMBER = (function() {return this;})();\n'
+      'const MVWGLOBALMANGLEMEMBER = (function() {return this;})();\n'
       + [
         'Object',
         'Node',
@@ -88,7 +88,7 @@ export const Formatters = {
         'RegExp',
         'Proxy',
         'Event'
-      ].map(name => `    const ${name}=MVWGLOBALROOTMEMBER.${name};`).join('\n')
+      ].map(name => `    const ${name}=MVWGLOBALMANGLEMEMBER.${name};`).join('\n')
       + '\n\n'
       + content
   },{ // Wraps a build file in a closure with a debug value set to the file's name
@@ -96,7 +96,7 @@ export const Formatters = {
     format: (path, content) =>
       `console.info("${Settings.webLocation}${Path.basename(path)}");\n`
       + `((MVWDEBUGBUILDIDENTIFIER) => {\n${content}\n})('${path}');\n`
-      + `MVW.Settings.register('version', '${Path.basename(path)} v${Settings.version}');\n\n`
+      + `MVW.Settings.register('version', '${Path.basename(path)} v${Settings.package.version}');\n\n`
   }],
   formatModule: function formatModule(path, content) {
     console.log.light.green(`  * Formatting '${path}':`)

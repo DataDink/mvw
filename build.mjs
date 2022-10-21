@@ -7,7 +7,7 @@ import {Formatters} from './build-formatters.mjs';
 Promise.resolve()
   .then(() => Settings.clearTerminal())
   .then(() => Settings.printBorder())
-  .then(() => console.log.bold.white(`Building MVW ${Settings.version}:\n`))
+  .then(() => console.log.bold.white(`Building MVW ${Settings.package.version}:\n`))
   .then(() => clean())
   .then(() => buildAll())
   .then(() => console.log.bold.green(`Build Complete!`))

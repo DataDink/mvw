@@ -7,7 +7,7 @@ import {Formatters} from './build-formatters.mjs';
 Promise.resolve()
   .then(() => Settings.clearTerminal())
   .then(() => Settings.printBorder())
-  .then(() => console.log.bold.white(`Packing MVW ${Settings.version} Release:\n`))
+  .then(() => console.log.bold.white(`Packing MVW ${Settings.package.version} Release:\n`))
   .then(() => clean())
   .then(() => copy())
   .then(() => zip())
@@ -47,7 +47,7 @@ async function zip() {
   console.log.yellow('Packing source...')
   var archive = new AdmZip();
   for (var config of Settings.buildConfigs) {
-    var name = `${Settings.package.name}-${config.name}-v${Settings.version}.zip`;
+    var name = `${Settings.package.name}-${config.name}-v${Settings.package.version}.zip`;
     console.log.light.green(`${name}`);
     var build = new AdmZip();
     var sources = Array.from(config.sources);
@@ -55,7 +55,7 @@ async function zip() {
       var source = sources.shift();
       if ((await FS.lstat(source)).isFile()) {
         console.log.light(`\t${source}`);
-        var code = Formatters.formatModule(await FS.readFile(source, 'utf8'));
+        var code = Formatters.formatModule(source, await FS.readFile(source, 'utf8'));
         build.addFile(source, Buffer.from(code, 'utf-8'));
       } else {
         sources.push(
@@ -67,7 +67,7 @@ async function zip() {
     var buffer = await new Promise((s,e)=>build.toBuffer(s,e));
     archive.addFile(name, buffer);
   }
-  var target = Path.join(Settings.releaseOutput, `${Settings.package.name}-${Settings.version}.source.zip`);
+  var target = Path.join(Settings.releaseOutput, `${Settings.package.name}-${Settings.package.version}.source.zip`);
   console.log.yellow(`Writing archive: ${target}\n`);
   archive.writeZip(target);
 }
@@ -76,7 +76,7 @@ async function bump() {
   var newVersion = (split => {
     split[split.length-1]=`${(parseInt(split[split.length-1])||0)+1}`;
     return split.join('.');
-  })(Array.from(Settings.version.matchAll(/\d+/g)));
-  console.log.yellow(`Bumping version ${Settings.version}->${Settings.package.version=Settings.version=newVersion}\n`);
+  })(Array.from(Settings.package.version.matchAll(/\d+/g)));
+  console.log.yellow(`Bumping version ${Settings.package.version}->${Settings.package.version=newVersion}\n`);
   await FS.writeFile('./package.json', JSON.stringify(Settings.package, null, 3));
 }
