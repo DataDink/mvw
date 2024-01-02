@@ -1,3 +1,8 @@
+> [!CAUTION]
+> This project is perma-archived.
+>
+> Something better this way comes.
+
 # mvw (model-view-web)
 
 *A micro extension library for rapid development of simple and limited-scope web-based applications and tooling*
